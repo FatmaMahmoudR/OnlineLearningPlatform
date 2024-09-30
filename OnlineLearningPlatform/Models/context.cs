@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace OnlineLearningPlatform.Models
 {
-    public class context : DbContext
+    public class context : IdentityDbContext<AppUser>
     {
         public context(DbContextOptions<context> options) : base(options)
         {

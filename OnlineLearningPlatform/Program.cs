@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Models;
 
@@ -14,6 +15,25 @@ namespace OnlineLearningPlatform
 
             builder.Services.AddDbContext<context>(opt =>
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+
+            builder.Services.AddIdentity<AppUser, IdentityRole>(
+    opt =>
+    {
+        opt.Password.RequiredLength = 3;
+        opt.Password.RequiredUniqueChars = 0;
+        opt.Password.RequireNonAlphanumeric = false;
+        opt.Password.RequireDigit = false;
+        opt.Password.RequireLowercase = false;
+        opt.Password.RequireUppercase = false;
+    }
+    ).AddEntityFrameworkStores<context>().AddDefaultTokenProviders();
+
+            builder.Services.ConfigureApplicationCookie(opt =>
+            {
+                opt.AccessDeniedPath = new PathString("/Account/AccessDeniedNew");
+            });
+
 
 
             var app = builder.Build();

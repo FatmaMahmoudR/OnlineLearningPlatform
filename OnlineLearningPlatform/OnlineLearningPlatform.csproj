@@ -22,8 +22,4 @@
 
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\OnlineLearningPlatform.Entities\OnlineLearningPlatform.Entities.csproj" />
-  </ItemGroup>
-
 </Project>

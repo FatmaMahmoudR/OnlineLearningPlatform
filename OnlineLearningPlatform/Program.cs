@@ -18,16 +18,16 @@ namespace OnlineLearningPlatform
 
 
             builder.Services.AddIdentity<AppUser, IdentityRole>(
-    opt =>
-    {
-        opt.Password.RequiredLength = 3;
-        opt.Password.RequiredUniqueChars = 0;
-        opt.Password.RequireNonAlphanumeric = false;
-        opt.Password.RequireDigit = false;
-        opt.Password.RequireLowercase = false;
-        opt.Password.RequireUppercase = false;
-    }
-    ).AddEntityFrameworkStores<context>().AddDefaultTokenProviders();
+            opt =>
+             {
+                  opt.Password.RequiredLength = 1;  ///*********
+                  opt.Password.RequiredUniqueChars = 0;
+                  opt.Password.RequireNonAlphanumeric = false;
+                  opt.Password.RequireDigit = false;
+                  opt.Password.RequireLowercase = false;
+                  opt.Password.RequireUppercase = false;
+             }
+             ).AddEntityFrameworkStores<context>().AddDefaultTokenProviders();
 
             builder.Services.ConfigureApplicationCookie(opt =>
             {

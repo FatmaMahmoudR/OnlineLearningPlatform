@@ -27,9 +27,9 @@ namespace OnlineLearningPlatform.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "62fe5285-fd68-4711-ae93-673787f4a001", 0, "b1da4002-2f97-4eb4-8901-b3d0d498586d", "user1@user.com", true, false, null, "USER1@USER.COM", "INSTRUCTOR", "AQAAAAIAAYagAAAAELeXSZUHJ6YszUBdzvXO6Xvn/ghAbdam2+apdcq9SxFw72CuQtF5WyuTjM3U7QjvSw==", null, false, "628ed9e9-17f7-405b-b78a-d84ecf42f369", false, "instructor" },
-                    { "62fe5285-fd68-4711-ae93-673787f4a111", 0, "eece34dd-a1a5-4798-8b1c-063cebff34d1", "user2@user.com", true, false, null, "USER2@USER.COM", "STUDENT", "AQAAAAIAAYagAAAAELJtxC4/BlrT+Ry1eJ6K0Kt6PcfttKExTCNM5AvlhtSKBJd49PBzejCuA4z0HEdhww==", null, false, "c5b5d035-b7fb-4203-9cd3-1dc6e969a24d", false, "student" },
-                    { "62fe5285-fd68-4711-ae93-673787f4ac66", 0, "d6a33810-90e8-4bee-8674-4300e85c38ce", "admin@admin.com", true, false, null, "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAIAAYagAAAAEPQu4luY4v6mISAvwIyyRl39pDNngfSuCUSiNixWuhkme3WRcpif2E7aHTrZTuFOMQ==", null, false, "ab82d800-7692-4ce6-ba22-959446eae9e1", false, "Admin" }
+                    { "62fe5285-fd68-4711-ae93-673787f4a001", 0, "10a04e85-236e-451f-b73a-7324a240fda8", "user1@user.com", true, false, null, "USER1@USER.COM", "INSTRUCTOR", "AQAAAAIAAYagAAAAENty6+3R2TWfphbwSWSZk0lHMD//Y8zRCjX1HtdNT3QhZBjX8uOh0IJl4CMiD6du3g==", null, false, "67cbba74-0634-4360-90d5-cd3f719eb418", false, "instructor" },
+                    { "62fe5285-fd68-4711-ae93-673787f4a111", 0, "0d99f4e8-36dd-47f6-b3e7-0364bd52ffba", "user2@user.com", true, false, null, "USER2@USER.COM", "STUDENT", "AQAAAAIAAYagAAAAEH7Ghp+d/KM6dK16C3gzK+U5RzUerBDtWw2cDHVxlqNBjOi9014VylJ064geijGtvQ==", null, false, "dfa8dc80-f8f0-47c9-be6e-3a9c08370e62", false, "student" },
+                    { "62fe5285-fd68-4711-ae93-673787f4ac66", 0, "fa2e63fc-09e0-4fd7-9a0b-968d82486f20", "admin@admin.com", true, false, null, "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAIAAYagAAAAEBzuq5//H60KvRKFpsBsQIOQgKkO//7D/WiutreVd2WQwNuVRYc1qd8OzM4UWQJ0yg==", null, false, "df8d6b59-2f22-44eb-9564-d3ca508adca3", false, "Admin" }
                 });
 
             migrationBuilder.InsertData(

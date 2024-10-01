@@ -361,3 +361,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/OnlineLearningPlatform/Migrations/20241001184340_seedIdentityData.cs

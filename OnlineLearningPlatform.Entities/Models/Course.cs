@@ -1,4 +1,5 @@
-﻿using OnlineLearningPlatform.Helpers;
+﻿using OnlineLearningPlatform.Entities.Models;
+using OnlineLearningPlatform.Helpers;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,11 +15,16 @@ namespace OnlineLearningPlatform.Models
         public DifficultyLevel DifficultyLevel { get; set; }
         public int EnrollmentCount { get; set; }
 
+        [ForeignKey("Instructor")]
+        public int InstructorId { get; set; } 
+        public Instructor Instructor { get; set; }
+
         // Navigation properties
 
-        public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
+        public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>(); 
 
-        //public ICollection<User> Users { get; set; }= new List<User>(); 
+     
+
 
     }
 }

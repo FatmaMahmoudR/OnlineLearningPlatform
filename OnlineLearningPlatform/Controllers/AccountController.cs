@@ -92,13 +92,14 @@ namespace MonPointOfSaleFinal.App.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
-        public IActionResult AccessDeniedNew()
-        {
-            return View();
-        }
+
+        //public IActionResult AccessDenied()
+        //{
+        //    return View();
+        //}
+        //public IActionResult AccessDeniedNew()
+        //{
+        //    return View();
+        //}
     }
 }

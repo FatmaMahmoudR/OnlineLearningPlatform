@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using OnlineLearningPlatform.App.Models;
+using OnlineLearningPlatform.Entities.Models;
 using System.Data;
+using System.Reflection.Emit;
+using System.Reflection.Metadata.Ecma335;
 
 namespace OnlineLearningPlatform.Models
 {
@@ -15,6 +19,35 @@ namespace OnlineLearningPlatform.Models
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            // Configuring Enrollment with no cascade delete on Student and Course
+            builder.Entity<Enrollment>()
+                .HasOne(e => e.Student)
+                .WithMany(s => s.Enrollments)
+                .HasForeignKey(e => e.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);  // No cascade delete
+
+            builder.Entity<Enrollment>()
+                .HasOne(e => e.Course)
+                .WithMany(c => c.Enrollments)
+                .HasForeignKey(e => e.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);  // No cascade delete
+
+            // Configuring Course and Instructor relationship with no cascade delete
+            builder.Entity<Course>()
+                .HasOne(c => c.Instructor)
+                .WithMany(i => i.TaughtCourses)
+                .HasForeignKey(c => c.InstructorId)
+                .OnDelete(DeleteBehavior.Restrict);  // No cascade delete
+
+            // Configuring Instructor and User relationship with no cascade delete
+            builder.Entity<Instructor>()
+                .HasOne(i => i.AppUser)
+                .WithMany()  // or specify relation if needed
+                .HasForeignKey(i => i.AppUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
 
             //Seeding 'Administrator' role to AspNetRoles table
             builder.Entity<IdentityRole>().HasData(
@@ -113,12 +146,20 @@ namespace OnlineLearningPlatform.Models
                     UserId = "62fe5285-fd68-4711-ae93-673787f4a111"
                 }
             );
+
+
+
+
         }
 
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Instructor> Instructors { get; set; }
 
-        public DbSet<User> Users { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
+       
+
+
 
 
     }

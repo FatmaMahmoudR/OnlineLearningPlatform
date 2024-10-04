@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineLearningPlatform.Models;
 
@@ -11,9 +12,11 @@ using OnlineLearningPlatform.Models;
 namespace OnlineLearningPlatform.Migrations
 {
     [DbContext(typeof(context))]
-    partial class contextModelSnapshot : ModelSnapshot
+    [Migration("20241004091447_fks_update")]
+    partial class fks_update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -210,13 +213,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.ToTable("Students");
                 });
@@ -229,13 +226,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.ToTable("Instructors");
                 });
@@ -312,16 +303,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4ac66",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1ce653b9-7dd5-43eb-8eb9-718692a77ee9",
+                            ConcurrencyStamp = "f88086bc-a409-461b-980a-cb09dd8c7b11",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFTv5SKYBNta6mXxEpFrsK9LklDAY6wBxF6Lz4XBWaxR4qvZB0JtVpj/65yvhOZHYw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIYPI8mJ/KwzzXpM6+Gyh5RLZwVbOQiZFvSAlnO0DqcornwwODJBCs4yAQJ/mIvsCg==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "4490cae5-a4bc-4100-b145-342ab166fac0",
+                            SecurityStamp = "d28e7412-1254-4165-b9a9-d243ba8e3c67",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         },
@@ -329,16 +320,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4a001",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "974f56b9-cc4b-407d-957f-abc79d4ac851",
+                            ConcurrencyStamp = "0db13228-a882-4a27-b250-4fad2768e9e7",
                             Email = "user1@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER1@USER.COM",
                             NormalizedUserName = "INSTRUCTOR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHpG8MtsLbPOtOiu2EZZiQhVgLx6Oh/wLRXHUnIRzsgOr8U+opz5Tho4Yj4j+mRp7g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI2+PijOWoFo0leC1Kt9z0WNjv78RpU7RFFpC6YOGE+tlZBGamYMF4JfGduyiYuYHQ==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "dae8a866-f39a-4051-a27e-76fb11d06692",
+                            SecurityStamp = "f51892fd-375c-40bf-b2ad-f1650e872687",
                             TwoFactorEnabled = false,
                             UserName = "instructor"
                         },
@@ -346,16 +337,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4a111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "124aab33-8955-44f5-8944-865fbdf31793",
+                            ConcurrencyStamp = "21495c3e-c4d9-4486-9f9d-ec20bae06a22",
                             Email = "user2@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER2@USER.COM",
                             NormalizedUserName = "STUDENT",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBm+J1wCzk5Ubbd9xtMi67vjv7KInXetEtCNVlYOLaS/TEa/2ReOlc0cAq3G5qxjLw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDt9Q+NGilBY0hHoXovNfxwSs1kZ0qltiBifP68VQCGdZCDVduU06+i3ZSJCq7ET3w==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "a78e8722-532c-46ca-b5eb-acce5fee7482",
+                            SecurityStamp = "cbf07502-009f-4103-a204-5da92d8f67f1",
                             TwoFactorEnabled = false,
                             UserName = "student"
                         });
@@ -480,34 +471,12 @@ namespace OnlineLearningPlatform.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OnlineLearningPlatform.App.Models.Student", b =>
-                {
-                    b.HasOne("OnlineLearningPlatform.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-                });
-
-            modelBuilder.Entity("OnlineLearningPlatform.Entities.Models.Instructor", b =>
-                {
-                    b.HasOne("OnlineLearningPlatform.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-                });
-
             modelBuilder.Entity("OnlineLearningPlatform.Models.Course", b =>
                 {
                     b.HasOne("OnlineLearningPlatform.Entities.Models.Instructor", "Instructor")
                         .WithMany("TaughtCourses")
                         .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Instructor");
@@ -518,13 +487,13 @@ namespace OnlineLearningPlatform.Migrations
                     b.HasOne("OnlineLearningPlatform.Models.Course", "Course")
                         .WithMany("Enrollments")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("OnlineLearningPlatform.App.Models.Student", "Student")
                         .WithMany("Enrollments")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Course");

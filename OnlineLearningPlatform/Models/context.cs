@@ -85,6 +85,7 @@ namespace OnlineLearningPlatform.Models
                     NormalizedEmail = "admin@admin.com".ToUpper(),
                     PasswordHash = hasher.HashPassword(null, "123"),
                     EmailConfirmed = true
+                    
                 },
                 new AppUser
                 {

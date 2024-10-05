@@ -18,6 +18,6 @@ namespace OnlineLearningPlatform.Models
 
         public DateTime EnrollmentDate { get; set; }
         public CompletionStatus CompletionStatus { get; set; }
-        public int Progress { get; set; }  // 0-100 percentage
+        public int Progress { get; set; }  // 0-100 percentage 
     }
 }

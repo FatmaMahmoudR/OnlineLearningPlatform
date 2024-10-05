@@ -312,16 +312,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4ac66",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1ce653b9-7dd5-43eb-8eb9-718692a77ee9",
+                            ConcurrencyStamp = "a7acdd08-8e91-4273-81e9-088afa7be451",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFTv5SKYBNta6mXxEpFrsK9LklDAY6wBxF6Lz4XBWaxR4qvZB0JtVpj/65yvhOZHYw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFotZ6a1kwjVv08iUPG86JHaeu3nTn8KD5BCs/fpGuR0cgfNEQuLdJs1S24nxirSyw==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "4490cae5-a4bc-4100-b145-342ab166fac0",
+                            SecurityStamp = "65b2745a-1bc8-43e8-9a09-f14abeb934a2",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         },
@@ -329,16 +329,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4a001",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "974f56b9-cc4b-407d-957f-abc79d4ac851",
+                            ConcurrencyStamp = "51a12bde-3f36-497b-8722-ecaef002e8d9",
                             Email = "user1@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER1@USER.COM",
                             NormalizedUserName = "INSTRUCTOR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHpG8MtsLbPOtOiu2EZZiQhVgLx6Oh/wLRXHUnIRzsgOr8U+opz5Tho4Yj4j+mRp7g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEP9uDZJDjbpwjGQrBhqJlh5DpZKxumgPcta+bIgzYs6Rjh1uiV2OI+YYc7HuPrb8KA==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "dae8a866-f39a-4051-a27e-76fb11d06692",
+                            SecurityStamp = "8eda341e-775a-434d-bfc5-1f5800f09ca2",
                             TwoFactorEnabled = false,
                             UserName = "instructor"
                         },
@@ -346,16 +346,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4a111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "124aab33-8955-44f5-8944-865fbdf31793",
+                            ConcurrencyStamp = "140dc51b-2014-437b-b14e-43436c0332d2",
                             Email = "user2@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER2@USER.COM",
                             NormalizedUserName = "STUDENT",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBm+J1wCzk5Ubbd9xtMi67vjv7KInXetEtCNVlYOLaS/TEa/2ReOlc0cAq3G5qxjLw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEF/6qMLP0JsK2UmppMCCV4tEy16PygrYEMV2Av8OsIEe2f48HaaTQg9Tlmr9BALbcg==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "a78e8722-532c-46ca-b5eb-acce5fee7482",
+                            SecurityStamp = "32c7c8d2-b2d8-465f-a446-8624bfb32302",
                             TwoFactorEnabled = false,
                             UserName = "student"
                         });
@@ -370,7 +370,6 @@ namespace OnlineLearningPlatform.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Category")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")

@@ -11,13 +11,13 @@ namespace OnlineLearningPlatform.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public string Category { get; set; }
+        public string? Category { get; set; }
         public DifficultyLevel DifficultyLevel { get; set; }
-        public int EnrollmentCount { get; set; }
+        public int EnrollmentCount { get; set; } = 0;
 
         [ForeignKey("Instructor")]
         public int InstructorId { get; set; } 
-        public Instructor Instructor { get; set; }
+        public Instructor? Instructor { get; set; }
 
         // Navigation properties
 

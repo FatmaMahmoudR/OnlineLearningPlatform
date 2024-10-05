@@ -14,7 +14,6 @@ namespace OnlineLearningPlatform.Entities.Models
         public int Id { get; set; }
         public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }  
-
         public ICollection<Course> TaughtCourses { get; set; }
 
 

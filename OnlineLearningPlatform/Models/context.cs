@@ -49,7 +49,7 @@ namespace OnlineLearningPlatform.Models
                 .Property(e => e.CompletionStatus)
                 .HasConversion<string>();
 
-            // Seeding 'Administrator' role to AspNetRoles table
+            // Seeding 'Administrator', 'Instructor', and 'Student' roles to AspNetRoles table
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole
                 {
@@ -74,11 +74,11 @@ namespace OnlineLearningPlatform.Models
             // A hasher to hash the password before seeding the user to the db
             var hasher = new PasswordHasher<AppUser>();
 
-            // Seeding the User to AspNetUsers table
+            // Seeding the Users to AspNetUsers table
             builder.Entity<AppUser>().HasData(
                 new AppUser
                 {
-                    Id = "62fe5285-fd68-4711-ae93-673787f4ac66", //PK
+                    Id = "62fe5285-fd68-4711-ae93-673787f4ac66", // Admin
                     UserName = "Admin",
                     NormalizedUserName = "ADMIN",
                     Email = "admin@admin.com",
@@ -88,54 +88,127 @@ namespace OnlineLearningPlatform.Models
                 },
                 new AppUser
                 {
-                    Id = "62fe5285-fd68-4711-ae93-673787f4a001", //PK
-                    UserName = "instructor",
-                    NormalizedUserName = "INSTRUCTOR",
-                    Email = "user1@user.com",
-                    NormalizedEmail = "USER1@USER.COM",
+                    Id = "62fe5285-fd68-4711-ae93-673787f4a001", // Instructor 1
+                    UserName = "instructor1",
+                    NormalizedUserName = "INSTRUCTOR1",
+                    Email = "instructor1@user.com",
+                    NormalizedEmail = "INSTRUCTOR1@USER.COM",
                     PasswordHash = hasher.HashPassword(null, "123"),
                     EmailConfirmed = true
                 },
                 new AppUser
                 {
-                    Id = "62fe5285-fd68-4711-ae93-673787f4a111", //PK
-                    UserName = "student",
-                    NormalizedUserName = "STUDENT",
-                    Email = "user2@user.com",
-                    NormalizedEmail = "USER2@USER.COM",
+                    Id = "62fe5285-fd68-4711-ae93-673787f4a002", // Instructor 2
+                    UserName = "instructor2",
+                    NormalizedUserName = "INSTRUCTOR2",
+                    Email = "instructor2@user.com",
+                    NormalizedEmail = "INSTRUCTOR2@USER.COM",
+                    PasswordHash = hasher.HashPassword(null, "123"),
+                    EmailConfirmed = true
+                },
+                new AppUser
+                {
+                    Id = "62fe5285-fd68-4711-ae93-673787f4a111", // Student 1
+                    UserName = "student1",
+                    NormalizedUserName = "STUDENT1",
+                    Email = "student1@user.com",
+                    NormalizedEmail = "STUDENT1@USER.COM",
+                    PasswordHash = hasher.HashPassword(null, "123"),
+                    EmailConfirmed = true
+                },
+                new AppUser
+                {
+                    Id = "62fe5285-fd68-4711-ae93-673787f4a112", // Student 2
+                    UserName = "student2",
+                    NormalizedUserName = "STUDENT2",
+                    Email = "student2@user.com",
+                    NormalizedEmail = "STUDENT2@USER.COM",
                     PasswordHash = hasher.HashPassword(null, "123"),
                     EmailConfirmed = true
                 }
             );
 
-            // Seeding the relation between our user and role to AspNetUserRoles table
+            // Seeding relations between our users and roles to AspNetUserRoles table
             builder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
-                    RoleId = "540fa4db-060f-4f1b-b60a-dd199bfe4f0b", // admin role
+                    RoleId = "540fa4db-060f-4f1b-b60a-dd199bfe4f0b", // Admin role
                     UserId = "62fe5285-fd68-4711-ae93-673787f4ac66"
                 },
                 new IdentityUserRole<string>
                 {
-                    RoleId = "540fa4db-060f-4f1b-b60a-dd199bfe4111", // instructor role
-                    UserId = "62fe5285-fd68-4711-ae93-673787f4ac66"
-                },
-                new IdentityUserRole<string>
-                {
-                    RoleId = "540fa4db-060f-4f1b-b60a-dd199bfe4001", // student role
-                    UserId = "62fe5285-fd68-4711-ae93-673787f4ac66"
-                },
-                new IdentityUserRole<string>
-                {
-                    RoleId = "540fa4db-060f-4f1b-b60a-dd199bfe4111", // instructor role
+                    RoleId = "540fa4db-060f-4f1b-b60a-dd199bfe4111", // Instructor role
                     UserId = "62fe5285-fd68-4711-ae93-673787f4a001"
                 },
                 new IdentityUserRole<string>
                 {
-                    RoleId = "540fa4db-060f-4f1b-b60a-dd199bfe4001", // student role
+                    RoleId = "540fa4db-060f-4f1b-b60a-dd199bfe4111", // Instructor role
+                    UserId = "62fe5285-fd68-4711-ae93-673787f4a002"
+                },
+                new IdentityUserRole<string>
+                {
+                    RoleId = "540fa4db-060f-4f1b-b60a-dd199bfe4001", // Student role
                     UserId = "62fe5285-fd68-4711-ae93-673787f4a111"
+                },
+                new IdentityUserRole<string>
+                {
+                    RoleId = "540fa4db-060f-4f1b-b60a-dd199bfe4001", // Student role
+                    UserId = "62fe5285-fd68-4711-ae93-673787f4a112"
                 }
             );
+
+            // Seeding Instructors table
+            builder.Entity<Instructor>().HasData(
+                new Instructor
+                {
+                    Id = 1,
+                    AppUserId = "62fe5285-fd68-4711-ae93-673787f4a001" // instructor1
+                },
+                new Instructor
+                {
+                    Id = 2,
+                    AppUserId = "62fe5285-fd68-4711-ae93-673787f4a002" // instructor2
+                }
+            );
+
+            // Seeding Students table
+            builder.Entity<Student>().HasData(
+                new Student
+                {
+                    Id = 1,
+                    AppUserId = "62fe5285-fd68-4711-ae93-673787f4a111" // student1
+                },
+                new Student
+                {
+                    Id = 2,
+                    AppUserId = "62fe5285-fd68-4711-ae93-673787f4a112" // student2
+                }
+            );
+
+            // Seeding Courses table
+            builder.Entity<Course>().HasData(
+                new Course
+                {
+                    Id = 1,
+                    Name = "Course 1",
+                    Description = "Description for Course 1",
+                    Category = "Category 1",
+                    DifficultyLevel = DifficultyLevel.Beginner,
+                    EnrollmentCount = 0,
+                    InstructorId = 1 // instructor1
+                },
+                new Course
+                {
+                    Id = 2,
+                    Name = "Course 2",
+                    Description = "Description for Course 2",
+                    Category = "Category 2",
+                    DifficultyLevel = DifficultyLevel.Intermediate,
+                    EnrollmentCount = 0,
+                    InstructorId = 2 // instructor2
+                }
+            );
+
         }
 
         public DbSet<Student> Students { get; set; }

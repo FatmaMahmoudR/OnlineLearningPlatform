@@ -9,7 +9,10 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-controller="Course" asp-action="Create">Create New</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-controller="Course" asp-action="Create">Create New</a>
+    }
 </p>
 <table class="table">
     <thead>
@@ -52,15 +55,25 @@
                     @Html.DisplayFor(modelItem => item.EnrollmentCount)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                    <!-- Enroll button -->
-                    <form asp-controller="Course" asp-action="Enroll" method="post" style="display:inline;">
-                        <input type="hidden" name="CourseId" value="@item.Id" />
-                        <input type="hidden" name="StudentId" value="@userId" /> 
-                        <button type="submit" class="btn btn-primary">Enroll</button>
-                    </form>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <text>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-primary">Delete</a> |
+                        </text>
+                    }
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <!-- Enroll button -->
+                        <form asp-controller="Course" asp-action="Enroll" method="post" style="display:inline;">
+                            <input type="hidden" name="CourseId" value="@item.Id" />
+                            <input type="hidden" name="StudentId" value="@userId" /> 
+                            <button type="submit" class="btn btn-primary">Enroll</button>
+                        </form>
+                    }
                 </td>
             </tr>
         }

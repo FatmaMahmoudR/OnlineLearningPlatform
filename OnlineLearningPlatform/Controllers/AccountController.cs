@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MonPointOfSaleFinal.Entities.ViewModels.Account;
+using OnlineLearningPlatform.Entities.ViewModels.Account;
 using OnlineLearningPlatform.Models;
 
-namespace MonPointOfSaleFinal.App.Controllers
+namespace OnlineLearningPlatform.App.Controllers
 {
     public class AccountController : Controller
     {

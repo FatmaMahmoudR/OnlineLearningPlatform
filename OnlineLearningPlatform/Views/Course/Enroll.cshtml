@@ -1,0 +1,25 @@
+﻿@model OnlineLearningPlatform.Models.Course
+
+@{
+    ViewData["Title"] = "Enroll in Course";
+}
+
+@if (Model != null)
+{
+    <h2>@Model.Name</h2>
+    <p>@Model.Description</p>
+
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-info">
+            @ViewBag.Message
+        </div>
+    }
+
+    <a href="@Url.Action("Index", "Course")">Back to Courses</a>
+
+}
+else
+{
+    <p>Error: Course data is missing.</p>
+}

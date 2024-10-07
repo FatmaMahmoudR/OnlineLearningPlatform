@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MonPointOfSaleFinal.Entities.ViewModels.Account
+namespace OnlineLearningPlatform.Entities.ViewModels.Account
 {
     public class LoginViewModel
     {

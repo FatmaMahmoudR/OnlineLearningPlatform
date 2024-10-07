@@ -1,4 +1,5 @@
 ﻿@model OnlineLearningPlatform.Models.Course
+@using System.Security.Claims
 
 @{
     ViewData["Title"] = "Details";
@@ -48,6 +49,19 @@
         </dd>
     </dl>
 </div>
+@if (User.Identity.IsAuthenticated)
+{
+    <h3>Enroll in this Course</h3>
+    <form asp-controller="Enroll" asp-action="Enroll" method="post">
+        <input type="hidden" name="studentId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+        <input type="hidden" name="courseId" value="@Model.Id" />
+        <button type="submit" class="btn btn-primary">Enroll</button>
+    </form>
+}
+else
+{
+    <p>Please <a href="@Url.Action("Login", "Account")">log in</a> to enroll in this course.</p>
+}
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>

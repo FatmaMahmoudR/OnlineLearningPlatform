@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<OnlineLearningPlatform.Models.Course>
+@using System.Security.Claims
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Courses";
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the logged-in user's ID
 }
 
 <h1>Index</h1>
@@ -31,29 +33,36 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DifficultyLevel)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EnrollmentCount)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DifficultyLevel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EnrollmentCount)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                    <!-- Enroll button -->
+                    <form asp-controller="Course" asp-action="Enroll" method="post" style="display:inline;">
+                        <input type="hidden" name="CourseId" value="@item.Id" />
+                        <input type="hidden" name="StudentId" value="@userId" /> 
+                        <button type="submit" class="btn btn-primary">Enroll</button>
+                    </form>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

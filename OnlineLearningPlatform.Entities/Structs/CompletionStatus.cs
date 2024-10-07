@@ -2,9 +2,8 @@
 {
     public enum CompletionStatus
     {
-        in_progress,
-        completed
+        NotStarted,
+        InProgress, 
+        Completed    
     }
-
-    
 }

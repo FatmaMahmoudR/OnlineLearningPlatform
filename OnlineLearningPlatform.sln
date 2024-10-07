@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineLearningPlatform.App", "OnlineLearningPlatform\OnlineLearningPlatform.App.csproj", "{983FD50B-9568-4C13-AC3D-D24EC9DF6D82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineLearningPlatform.Entities", "OnlineLearningPlatform.Entities\OnlineLearningPlatform.Entities.csproj", "{EA87045B-63FB-45C3-B07E-0EE049730DEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineLearningPlatform.Entities", "OnlineLearningPlatform.Entities\OnlineLearningPlatform.Entities.csproj", "{EA87045B-63FB-45C3-B07E-0EE049730DEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

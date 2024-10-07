@@ -2,16 +2,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Plugins;
 using OnlineLearningPlatform.Entities.Models;
+using OnlineLearningPlatform.Helpers;
 using OnlineLearningPlatform.Models;
+using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace OnlineLearningPlatform.Controllers
 {
     [Authorize]
     public class CourseController : Controller
     {
-        private  context _context;
+        private readonly context _context;
 
         public CourseController(context context)
         {
@@ -26,8 +30,6 @@ namespace OnlineLearningPlatform.Controllers
             return View(courses);
         }
 
-
-
         // GET: /Course/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -35,12 +37,12 @@ namespace OnlineLearningPlatform.Controllers
             {
                 return NotFound();
             }
-          
 
-            var course = _context.Courses
-                         .Include(c => c.Instructor) 
-                         .ThenInclude(i => i.AppUser) 
-                         .FirstOrDefault(c => c.Id == id);
+            var course = await _context.Courses
+                .Include(c => c.Instructor)
+                .ThenInclude(i => i.AppUser)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
             if (course == null)
             {
                 return NotFound();
@@ -49,39 +51,65 @@ namespace OnlineLearningPlatform.Controllers
             return View(course);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Enroll(int courseId)
+        {
+            // Get the StudentId from claims (as GUID)
+            var studentIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var studentId = GetStudentIdFromDatabase(studentIdClaim);
 
+
+            // Check if the student is already enrolled in the course
+            var existingEnrollment = await _context.Enrollments
+                .FirstOrDefaultAsync(e => e.CourseId == courseId && e.StudentId == studentId);
+
+            if (existingEnrollment != null)  // means true (he exist)
+            {
+                ViewBag.Message = "You are already enrolled in this course.";
+                return View(await _context.Courses.FindAsync(courseId)); 
+            }
+
+            else
+            {
+                var enrollment = new Enrollment
+                {
+                    CourseId = courseId,
+                    StudentId = studentId,
+                    EnrollmentDate = DateTime.Now,
+                    CompletionStatus = CompletionStatus.InProgress,
+                    Progress = 0
+                };
+
+                _context.Enrollments.Add(enrollment);
+                await _context.SaveChangesAsync();
+
+                ViewBag.Message = "You have successfully enrolled in the course.";
+            }
+            return View(await _context.Courses.FindAsync(courseId)); 
+        }
+
+        // GET: /Course/Create
         public async Task<IActionResult> Create()
         {
-            var instructors = await _context.Instructors
-                .Include(i => i.AppUser) 
-                .ToListAsync();
-
-            ViewData["instructors"] = instructors; 
+            var instructors = await _context.Instructors.Include(i => i.AppUser).ToListAsync();
+            ViewData["instructors"] = instructors;
             return View();
         }
 
         // POST: /Course/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( Course course)
+        public async Task<IActionResult> Create(Course course)
         {
             if (ModelState.IsValid)
             {
-
                 _context.Add(course);
                 await _context.SaveChangesAsync();
-
                 return RedirectToAction(nameof(Index));
             }
-
-           
-
             return View(course);
         }
-
-
-
-
 
         // GET: /Course/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -91,25 +119,19 @@ namespace OnlineLearningPlatform.Controllers
                 return NotFound();
             }
 
-            var course = await _context.Courses
-                .Include(c => c.Instructor) // Include Instructor for dropdown
-                .FirstOrDefaultAsync(c => c.Id == id);
+            var course = await _context.Courses.Include(c => c.Instructor).FirstOrDefaultAsync(c => c.Id == id);
 
             if (course == null)
             {
                 return NotFound();
             }
 
-            // Load instructors from the database
             var instructors = await _context.Instructors.Include(i => i.AppUser).ToListAsync();
-            ViewBag.instructors = instructors; // Use ViewBag to send to view
-
-            // Pass the DifficultyLevel enum values to the view
-            ViewBag.DifficultyLevels = new SelectList(Enum.GetValues(typeof(OnlineLearningPlatform.Helpers.DifficultyLevel)));
+            ViewBag.instructors = instructors;
+            ViewBag.DifficultyLevels = new SelectList(Enum.GetValues(typeof(DifficultyLevel)));
 
             return View(course);
         }
-
 
         // POST: /Course/Edit/5
         [HttpPost]
@@ -142,10 +164,9 @@ namespace OnlineLearningPlatform.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Reload instructors and difficulty levels if model validation fails
             var instructors = await _context.Instructors.Include(i => i.AppUser).ToListAsync();
             ViewBag.instructors = instructors;
-            ViewBag.DifficultyLevels = new SelectList(Enum.GetValues(typeof(OnlineLearningPlatform.Helpers.DifficultyLevel)));
+            ViewBag.DifficultyLevels = new SelectList(Enum.GetValues(typeof(DifficultyLevel)));
 
             return View(course);
         }
@@ -186,12 +207,11 @@ namespace OnlineLearningPlatform.Controllers
         }
 
 
-
-
-
+        // Helper method to retrieve StudentId from the database
+        private int GetStudentIdFromDatabase(string studentId)
+        {
+            var student = _context.Students.FirstOrDefault(s => s.AppUserId == studentId);
+            return student?.Id ?? 0;
+        }
     }
-
-
-
-
 }

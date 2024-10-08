@@ -23,15 +23,16 @@ namespace OnlineLearningPlatform.Controllers
         }
 
         [AllowAnonymous]
-        // GET: /Course/
+        [HttpGet]
+        [Route("Course")]
         public async Task<IActionResult> Index()
         {
-            var courses = await _context.Courses.ToListAsync();
+            var courses = await _context.Courses.ToListAsync();   
+                                                                  // This function will show me all the couses in tne DB 
             return View(courses);
         }
 
         // GET: /Course/Details/5
-        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -54,23 +55,21 @@ namespace OnlineLearningPlatform.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Enroll(int courseId)
+        public async Task <IActionResult> Enroll(int courseId)
         {
-            // Get the StudentId from claims (as GUID)
-            var studentIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // Get the StudentId from claims
+            var studentIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);  //retrieves student's AppUserId from the claims.
             var studentId = GetStudentIdFromDatabase(studentIdClaim);
-
 
             // Check if the student is already enrolled in the course
             var existingEnrollment = await _context.Enrollments
                 .FirstOrDefaultAsync(e => e.CourseId == courseId && e.StudentId == studentId);
 
-            if (existingEnrollment != null)  // means true (he exist)
+            if (existingEnrollment != null)  // means true (he exists)
             {
                 ViewBag.Message = "You are already enrolled in this course.";
-                return View(await _context.Courses.FindAsync(courseId)); 
+                return View(await _context.Courses.FindAsync(courseId));
             }
-
             else
             {
                 var enrollment = new Enrollment
@@ -79,18 +78,31 @@ namespace OnlineLearningPlatform.Controllers
                     StudentId = studentId,
                     EnrollmentDate = DateTime.Now,
                     CompletionStatus = CompletionStatus.InProgress,
-                    Progress = 0
+                    Progress = 0,
                 };
 
                 _context.Enrollments.Add(enrollment);
+
+                // Increment the enrollment count for the course
+                var course = await _context.Courses.FindAsync(courseId);
+                if (course != null)
+                {
+                    course.EnrollmentCount++; // Increment the enrollment count by one
+                }
                 await _context.SaveChangesAsync();
 
                 ViewBag.Message = "You have successfully enrolled in the course.";
             }
-            return View(await _context.Courses.FindAsync(courseId)); 
+            return View(await _context.Courses.FindAsync(courseId));
         }
 
-        [Authorize(Roles = "Admin")]
+        // Helper method to retrieve StudentId from the database
+        private int GetStudentIdFromDatabase(string studentId)
+        {
+            var student = _context.Students.FirstOrDefault(s => s.AppUserId == studentId);
+            return student?.Id ?? 0;
+        }
+
         // GET: /Course/Create
         public async Task<IActionResult> Create()
         {
@@ -102,8 +114,6 @@ namespace OnlineLearningPlatform.Controllers
         // POST: /Course/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Course course)
         {
             if (ModelState.IsValid)
@@ -116,7 +126,6 @@ namespace OnlineLearningPlatform.Controllers
         }
 
         // GET: /Course/Edit/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -141,7 +150,6 @@ namespace OnlineLearningPlatform.Controllers
         // POST: /Course/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, Course course)
         {
             if (id != course.Id)
@@ -177,9 +185,7 @@ namespace OnlineLearningPlatform.Controllers
             return View(course);
         }
 
-
         // GET: /Course/Delete/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -198,7 +204,6 @@ namespace OnlineLearningPlatform.Controllers
         }
 
         // POST: /Course/Delete/5
-        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -209,17 +214,10 @@ namespace OnlineLearningPlatform.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Helper method to check if a course exists
         private bool CourseExists(int id)
         {
             return _context.Courses.Any(e => e.Id == id);
-        }
-
-
-        // Helper method to retrieve StudentId from the database
-        private int GetStudentIdFromDatabase(string studentId)
-        {
-            var student = _context.Students.FirstOrDefault(s => s.AppUserId == studentId);
-            return student?.Id ?? 0;
         }
     }
 }

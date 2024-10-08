@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Entities.Models;
 using OnlineLearningPlatform.Helpers;
+using System.Reflection.Emit;
 
 namespace OnlineLearningPlatform.Models
 {
@@ -16,6 +17,16 @@ namespace OnlineLearningPlatform.Models
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            //shadow prop for soft delete
+            builder.Entity<Course>().Property<bool>("Deleted").IsRequired().HasDefaultValue(false);
+
+            // global query filter -> delete course property
+            builder.Entity<Course>().HasQueryFilter(c => !EF.Property<bool>(c, "Deleted"));
+
+            builder.Entity<Enrollment>()
+            .HasQueryFilter(e => !EF.Property<bool>(e.Course, "Deleted"));
+
 
             // Configuring Enrollment with no cascade delete on Student and Course
             builder.Entity<Enrollment>()

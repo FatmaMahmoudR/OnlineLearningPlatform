@@ -27,8 +27,8 @@ namespace OnlineLearningPlatform.Controllers
         [Route("Course")]
         public async Task<IActionResult> Index()
         {
-            var courses = await _context.Courses.ToListAsync();   
-                                                                  // This function will show me all the couses in tne DB 
+            var courses = await _context.Courses.ToListAsync();
+
             return View(courses);
         }
 
@@ -43,7 +43,7 @@ namespace OnlineLearningPlatform.Controllers
             var course = await _context.Courses
                 .Include(c => c.Instructor)
                 .ThenInclude(i => i.AppUser)
-                .FirstOrDefaultAsync(c => c.Id == id);
+                .FirstOrDefaultAsync(c => c.Id == id && !EF.Property<bool>(c, "Deleted")); // Check if not deleted
 
             if (course == null)
             {
@@ -55,17 +55,17 @@ namespace OnlineLearningPlatform.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task <IActionResult> Enroll(int courseId)
+        public async Task<IActionResult> Enroll(int courseId)
         {
             // Get the StudentId from claims
-            var studentIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);  //retrieves student's AppUserId from the claims.
+            var studentIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var studentId = GetStudentIdFromDatabase(studentIdClaim);
 
             // Check if the student is already enrolled in the course
             var existingEnrollment = await _context.Enrollments
                 .FirstOrDefaultAsync(e => e.CourseId == courseId && e.StudentId == studentId);
 
-            if (existingEnrollment != null)  // means true (he exists)
+            if (existingEnrollment != null)
             {
                 ViewBag.Message = "You are already enrolled in this course.";
                 return View(await _context.Courses.FindAsync(courseId));
@@ -133,7 +133,7 @@ namespace OnlineLearningPlatform.Controllers
                 return NotFound();
             }
 
-            var course = await _context.Courses.Include(c => c.Instructor).FirstOrDefaultAsync(c => c.Id == id);
+            var course = await _context.Courses.Include(c => c.Instructor).FirstOrDefaultAsync(c => c.Id == id && !EF.Property<bool>(c, "Deleted")); // Check if not deleted
 
             if (course == null)
             {
@@ -185,6 +185,9 @@ namespace OnlineLearningPlatform.Controllers
             return View(course);
         }
 
+
+
+
         // GET: /Course/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -193,9 +196,19 @@ namespace OnlineLearningPlatform.Controllers
                 return NotFound();
             }
 
+            // Retrieve the course while ignoring query filters
             var course = await _context.Courses
+                .IgnoreQueryFilters() // Ignore filters to find by ID regardless of deletion status
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (course == null)
+            {
+                return NotFound();
+            }
+
+            // Check if the course is marked as deleted using the shadow property
+            // Note: No await here; accessing a shadow property is synchronous
+            if (_context.Entry(course).Property<bool>("Deleted").CurrentValue)
             {
                 return NotFound();
             }
@@ -208,16 +221,32 @@ namespace OnlineLearningPlatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var course = await _context.Courses.FindAsync(id);
-            _context.Courses.Remove(course);
+            // Retrieve the course while ignoring query filters
+            var course = await _context.Courses
+                .IgnoreQueryFilters() // Ensure we can find the course regardless of deletion status
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            // Set the shadow property to true for soft delete
+            _context.Entry(course).Property("Deleted").CurrentValue = true;
+
+            // Optionally mark the entity as modified (not always necessary)
+            _context.Courses.Update(course);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
+
         // Helper method to check if a course exists
         private bool CourseExists(int id)
         {
-            return _context.Courses.Any(e => e.Id == id);
+            // Check for non-deleted courses
+            return _context.Courses.Any(e => e.Id == id && !EF.Property<bool>(e, "Deleted"));
         }
     }
 }

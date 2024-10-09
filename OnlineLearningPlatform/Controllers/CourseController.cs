@@ -27,10 +27,30 @@ namespace OnlineLearningPlatform.Controllers
         [Route("Course")]
         public async Task<IActionResult> Index()
         {
-            var courses = await _context.Courses.ToListAsync();
-
+            var courses = await _context.Courses.ToListAsync();   // dah when the user not searching  (NO Search String Input)
+                                                                  // This function will show me all the couses in tne DB 
             return View(courses);
         }
+
+        [HttpGet]
+        [Route("Course/Search")]
+        public async Task<IActionResult> Index(string searchString)  // dah b2a will be executed lma yb2a feh input in the search
+        {
+            var courses = from c in _context.Courses select c;  // Retrieve all courses from the Courses table
+                                                                // in the DB - that contains search string -
+
+            // Check if a search string was provided 
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                courses = courses.Where(c => c.Name.Contains(searchString));
+            }
+
+            // store the search string in ViewData 3lshan law ht3mle tla2e el input bta3k lsa mogod
+            ViewData["CurrentFilter"] = searchString;
+
+            return View(await courses.ToListAsync());
+        }
+
 
         // GET: /Course/Details/5
         public async Task<IActionResult> Details(int? id)

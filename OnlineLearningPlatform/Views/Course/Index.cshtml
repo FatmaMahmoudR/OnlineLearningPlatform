@@ -6,7 +6,15 @@
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the logged-in user's ID
 }
 
-<h1>Index</h1>
+<h1>Courses</h1>
+
+<!-- Search Form -->
+<form asp-action="Index" method="get">
+    <p>
+        Course name : <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />  <!-- name="searchString" contains user input-->
+        <input type="submit" value="Search" />
+    </p>
+</form>
 
 <p>
     @if (User.IsInRole("Admin"))

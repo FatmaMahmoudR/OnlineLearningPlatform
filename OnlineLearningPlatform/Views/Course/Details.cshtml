@@ -11,34 +11,34 @@
     <h4>Course</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Category)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Category)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DifficultyLevel)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DifficultyLevel)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EnrollmentCount)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.EnrollmentCount)
         </dd>
         <dt class="col-sm-2">
@@ -52,17 +52,23 @@
 @if (User.Identity.IsAuthenticated)
 {
     <h3>Enroll in this Course</h3>
-    <form asp-controller="Enroll" asp-action="Enroll" method="post">
+    <form asp-controller="Course" asp-action="Enroll" method="post">
         <input type="hidden" name="studentId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
         <input type="hidden" name="courseId" value="@Model.Id" />
         <button type="submit" class="btn btn-primary">Enroll</button>
     </form>
+
+
 }
 else
 {
     <p>Please <a href="@Url.Action("Login", "Account")">log in</a> to enroll in this course.</p>
 }
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+    }
     <a asp-action="Index">Back to List</a>
 </div>

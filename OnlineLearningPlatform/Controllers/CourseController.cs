@@ -75,6 +75,7 @@ namespace OnlineLearningPlatform.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> Enroll(int courseId)
         {
             // Get the StudentId from claims
@@ -124,6 +125,7 @@ namespace OnlineLearningPlatform.Controllers
         }
 
         // GET: /Course/Create
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             var instructors = await _context.Instructors.Include(i => i.AppUser).ToListAsync();
@@ -134,6 +136,7 @@ namespace OnlineLearningPlatform.Controllers
         // POST: /Course/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Course course)
         {
             if (ModelState.IsValid)
@@ -146,6 +149,7 @@ namespace OnlineLearningPlatform.Controllers
         }
 
         // GET: /Course/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -170,6 +174,7 @@ namespace OnlineLearningPlatform.Controllers
         // POST: /Course/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, Course course)
         {
             if (id != course.Id)
@@ -209,6 +214,7 @@ namespace OnlineLearningPlatform.Controllers
 
 
         // GET: /Course/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -239,6 +245,7 @@ namespace OnlineLearningPlatform.Controllers
         // POST: /Course/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             // Retrieve the course while ignoring query filters

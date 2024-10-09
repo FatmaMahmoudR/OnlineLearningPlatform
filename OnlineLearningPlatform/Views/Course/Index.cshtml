@@ -73,7 +73,7 @@
                     }
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
 
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.IsInRole("Student"))
                     {
                         <!-- Enroll button -->
                         <form asp-controller="Course" asp-action="Enroll" method="post" style="display:inline;">

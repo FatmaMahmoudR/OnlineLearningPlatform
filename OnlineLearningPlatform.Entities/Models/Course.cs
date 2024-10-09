@@ -16,14 +16,16 @@ namespace OnlineLearningPlatform.Models
 
 
         [ForeignKey("Instructor")]
-        public int InstructorId { get; set; } 
+        public int InstructorId { get; set; }
         public Instructor? Instructor { get; set; }
 
         // Navigation properties
 
-        public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>(); 
+        public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
+        public List<Module>? Modules { get; set; }
 
-     
+
+
 
 
     }

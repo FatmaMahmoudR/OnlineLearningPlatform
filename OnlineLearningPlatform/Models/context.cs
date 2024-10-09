@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Entities.Models;
 using OnlineLearningPlatform.Helpers;
+using OnlineLearningPlatform.Migrations;
+using System.Reflection;
 using System.Reflection.Emit;
+using Module = OnlineLearningPlatform.Entities.Models.Module;
 
 namespace OnlineLearningPlatform.Models
 {
@@ -16,16 +19,21 @@ namespace OnlineLearningPlatform.Models
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            
             base.OnModelCreating(builder);
 
             //shadow prop for soft delete
             builder.Entity<Course>().Property<bool>("Deleted").IsRequired().HasDefaultValue(false);
+            builder.Entity<Module>().Property<bool>("Deleted").IsRequired().HasDefaultValue(false);
+           
 
             // global query filter -> delete course property
             builder.Entity<Course>().HasQueryFilter(c => !EF.Property<bool>(c, "Deleted"));
+            builder.Entity<Module>().HasQueryFilter(m => !EF.Property<bool>(m, "Deleted"));
 
-            builder.Entity<Enrollment>()
-            .HasQueryFilter(e => !EF.Property<bool>(e.Course, "Deleted"));
+            //related tables
+            builder.Entity<Enrollment>().HasQueryFilter(e => !EF.Property<bool>(e.Course, "Deleted"));
+            builder.Entity<Lesson>().HasQueryFilter(e => !EF.Property<bool>(e.Module, "Deleted"));
 
 
             // Configuring Enrollment with no cascade delete on Student and Course
@@ -201,9 +209,9 @@ namespace OnlineLearningPlatform.Models
                 new Course
                 {
                     Id = 1,
-                    Name = "Course 1",
-                    Description = "Description for Course 1",
-                    Category = "Category 1",
+                    Name = "ASP.NET Core",
+                    Description = "Learn the basics of ASP.NET Core",
+                    Category = "Back-end",
                     DifficultyLevel = DifficultyLevel.Beginner,
                     EnrollmentCount = 0,
                     InstructorId = 1 // instructor1
@@ -211,13 +219,20 @@ namespace OnlineLearningPlatform.Models
                 new Course
                 {
                     Id = 2,
-                    Name = "Course 2",
-                    Description = "Description for Course 2",
-                    Category = "Category 2",
+                    Name = "Entity Framework Core",
+                    Description = "Master EF Core",
+                    Category = "Back-end",
                     DifficultyLevel = DifficultyLevel.Intermediate,
                     EnrollmentCount = 0,
                     InstructorId = 2 // instructor2
                 }
+            );
+
+
+            builder.Entity<Module>().HasData(
+                new Module { Id = 1, CourseId = 1, Title = "Introduction to ASP.NET Core" },
+                new Module { Id = 2, CourseId = 1, Title = "Controllers and Views" },
+                new Module { Id = 3, CourseId = 2, Title = "Getting Started with EF Core" }
             );
 
         }
@@ -226,5 +241,6 @@ namespace OnlineLearningPlatform.Models
         public DbSet<Instructor> Instructors { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Module> Modules { get; set; }
     }
 }

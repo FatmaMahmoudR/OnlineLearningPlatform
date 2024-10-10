@@ -13,11 +13,11 @@ namespace OnlineLearningPlatform.App.Controllers
 {
 
     [Authorize(Roles ="Instructor")]
-    public class ModuleController : Controller
+    public class LessonController : Controller
     {
         private readonly context _context;
 
-        public ModuleController(context context)
+        public LessonController(context context)
         {
             _context = context;
         }
@@ -27,7 +27,7 @@ namespace OnlineLearningPlatform.App.Controllers
         public async Task<IActionResult> Index(int courseId)
         {
             var course = await _context.Courses
-                                       .Include(c => c.Modules)
+                                       .Include(c => c.Lessons)
                                        .FirstOrDefaultAsync(c => c.Id == courseId && !EF.Property<bool>(c, "Deleted"));
 
             if (course == null)
@@ -37,29 +37,27 @@ namespace OnlineLearningPlatform.App.Controllers
 
             ViewBag.CourseId = courseId;
             ViewBag.CourseTitle = course.Name;
-            return View(course.Modules);
+            return View(course.Lessons);
         }
 
 
-        // GET: /Module/Details/5
+        // GET: /Lesson/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var module = await _context.Modules
-                                       .Include(m => m.Lessons) // Include related lessons
-                                       .FirstOrDefaultAsync(m => m.Id == id );
+            var lesson = await _context.Lessons.FirstOrDefaultAsync(m => m.Id == id );
 
-            if (module == null)
+            if (lesson == null)
             {
                 return NotFound();
             }
 
-            return View(module);
+            return View(lesson);
         }
 
 
 
 
-        // GET: /Module/Create?courseId=1
+        // GET: /Lesson/Create?courseId=1
         public IActionResult Create(int courseId)
         {
             var course = _context.Courses.FirstOrDefault(c => c.Id == courseId);
@@ -68,25 +66,25 @@ namespace OnlineLearningPlatform.App.Controllers
                 return NotFound();
             }
             ViewBag.CourseId = courseId;
-            var m = new Module();           
-            return View(m);
+            var l = new Lesson();           
+            return View(l);
         }
 
         // POST: /Module/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Module module)
+        public async Task<IActionResult> Create(Lesson lesson)
         {   
             if (ModelState.IsValid)
-            { 
-                module.Course=_context.Courses.FirstOrDefault(c=>c.Id== module.CourseId);
-                _context.Modules.Add(module);
+            {
+                lesson.Course=_context.Courses.FirstOrDefault(c=>c.Id == lesson.CourseId);
+                _context.Lessons.Add(lesson);
 
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), new { courseId = module.CourseId });
+                return RedirectToAction(nameof(Index), new { courseId = lesson.CourseId });
             }
-            ViewBag.CourseId = module.CourseId;
-            return View(module);
+            ViewBag.CourseId = lesson.CourseId;
+            return View(lesson);
         }
 
 
@@ -98,7 +96,7 @@ namespace OnlineLearningPlatform.App.Controllers
         // GET: Module/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var module = await _context.Modules
+            var module = await _context.Lessons
                 .FirstOrDefaultAsync(m => m.Id == id && !EF.Property<bool>(m, "Deleted"));
 
             if (module == null)
@@ -114,9 +112,9 @@ namespace OnlineLearningPlatform.App.Controllers
         // POST: Module/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Module module)
+        public async Task<IActionResult> Edit(int id, Lesson lesson)
         {
-            if (id != module.Id)
+            if (id != lesson.Id)
             {
                 return NotFound();
             }
@@ -125,20 +123,20 @@ namespace OnlineLearningPlatform.App.Controllers
             {
                 try
                 {
-                    var currModule = await _context.Modules.FindAsync(id);
+                    var currLesson = await _context.Lessons.FindAsync(id);
 
-                    if (currModule == null)
+                    if (currLesson == null)
                     {
                         return NotFound();
                     }
 
-                    currModule.Title = module.Title;
+                    currLesson.Title = lesson.Title;
 
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ModuleExists(module.Id))
+                    if (!ModuleExists(lesson.Id))
                     {
                         return NotFound();
                     }
@@ -147,54 +145,51 @@ namespace OnlineLearningPlatform.App.Controllers
                         throw; 
                     }
                 }
-                return RedirectToAction(nameof(Index), new { courseId = module.CourseId });
+                return RedirectToAction(nameof(Index), new { courseId = lesson.CourseId });
 
             }
 
-            // If we got this far, something failed; redisplay the form
-            return View(module);
+            return View(lesson);
         }
 
 
 
 
 
-
-
-        // GET: /Module/Delete/5
+        // GET: /Lesson/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var module = await _context.Modules
-                                       .Include(m => m.Course)
-                                       .FirstOrDefaultAsync(m => m.Id == id && !EF.Property<bool>(m, "Deleted"));
+            var lesson = await _context.Lessons
+                                       .Include(l => l.Course)
+                                       .FirstOrDefaultAsync(l => l.Id == id && !EF.Property<bool>(l, "Deleted"));
 
-            if (module == null)
+            if (lesson == null)
             {
                 return NotFound();
             }
 
-            return View(module);
+            return View(lesson);
         }
 
-        // POST: /Module/Delete/5
+        // POST: /Lesson/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var module = await _context.Modules.FindAsync(id);
-            if (module != null)
+            var lesson = await _context.Lessons.FindAsync(id);
+            if (lesson != null)
             {
                 // Soft delete using shadow property
-                _context.Entry(module).Property("Deleted").CurrentValue = true;
+                _context.Entry(lesson).Property("Deleted").CurrentValue = true;
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToAction(nameof(Index), new { courseId = module.CourseId });
+            return RedirectToAction(nameof(Index), new { courseId = lesson.CourseId });
         }
 
         private bool ModuleExists(int id)
         {
-            return _context.Modules.Any(e => e.Id == id && !EF.Property<bool>(e, "Deleted"));
+            return _context.Lessons.Any(e => e.Id == id && !EF.Property<bool>(e, "Deleted"));
         }
     }
 }

@@ -49,7 +49,7 @@
         </dd>
     </dl>
 </div>
-@if (User.Identity.IsAuthenticated)
+@if (User.IsInRole("Student"))
 {
     <h3>Enroll in this Course</h3>
     <form asp-controller="Course" asp-action="Enroll" method="post">

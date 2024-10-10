@@ -28,8 +28,22 @@
                             // Add admin-specific links here if needed
                         }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Index">Courses</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Index">All Courses</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Instructor"))
+                        {
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="MyCourses">Courses Control</a>
+                            </li>
+                        }
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
+                        {
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="MyCourses">My Courses</a>
+                            </li>
+                        }
+
+
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

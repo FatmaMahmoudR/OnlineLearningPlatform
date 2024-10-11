@@ -1,0 +1,293 @@
+﻿@model OnlineLearningPlatform.Models.Enrollment
+@using System.Security.Claims
+
+@{
+	ViewData["Title"] = "Details";
+}
+
+<head>
+	<title>My Courses </title>
+
+	<!-- Meta -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Xiaoying Riley at 3rd Wave Media">
+	<link rel="shortcut icon" href="@Url.Content("~/CrsLanding/assets/favicon.ico")">
+
+	<!-- Google Font -->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:800|Roboto:400,500,700&display=swap" rel="stylesheet">
+
+	<!-- FontAwesome JS-->
+	<script defer src="@Url.Content("~/CrsLanding/assets/fontawesome/js/all.min.js")"></script>
+
+	<!-- Theme CSS -->
+	<link id="theme-style" rel="stylesheet" href="@Url.Content("~/CrsLanding/assets/css/theme.css")">
+
+
+</head>
+
+@{
+
+	string ExtractYouTubeVideoId(string url)
+	{
+		if (url.Contains("youtu.be/"))
+		{
+			// youtu.be/ID
+			var index = url.IndexOf("youtu.be/") + 9;
+			return url.Substring(index, 11);
+		}
+		else if (url.Contains("v="))
+		{
+			// youtube.com/watch?v=ID
+			var index = url.IndexOf("v=") + 2;
+			return url.Substring(index, 11);
+		}
+		return string.Empty;
+	}
+}
+
+
+<body>
+
+	<header class="header">
+		<section class="hero-section" style="background:url('@Url.Content("~/CrsLanding/assets/images/bg.png")')">
+
+			<div class="hero-mask">
+			</div><!--//hero-mask-->
+			<div class="container text-center py-5">
+				<div class="single-col-max mx-auto">
+
+					<h1 class="hero-heading mb-5">
+						<span class="brand mb-4 d-block"><span class="text-highlight pr-2">{ </span><span class="name">@Model?.Course?.Category</span><span class="text-highlight pl-2"> }</span></span>
+						<span class="desc d-block"> @Model?.Course?.Name</span>
+					</h1>
+					<!-- if not enrolled -->
+					<!-- <div class="text-center mb-5">
+						<a href="#section-pricing" class="btn btn-primary btn-lg scrollto">Start Learning Now</a>
+					</div> -->
+
+					<div class="hero-summary">
+						<div class="row">
+							<div class="item col-4">
+								<div class="summary-desc mb-1"><i class="icon fas fa-video me-2"></i>Content</div>
+								<h4 class="summary-heading">80+ <span class="desc">Videos</span></h4>
+
+							</div><!--//col-->
+							<div class="item col-4">
+								<div class="summary-desc mb-1"><i class="fas fa-bolt me-2"></i> </i>Level</div>
+								<h4 class="summary-heading"> @Model?.Course?.DifficultyLevel </h4>
+
+							</div><!--//col-->
+							<div class="item col-4">
+								<div class="summary-desc mb-1"><i class="icon fas fa-user-circle me-2"></i>Instructor</div>
+								<h4 class="summary-heading">@Model?.Course?.Instructor?.AppUser?.UserName</h4>
+
+							</div><!--//col-->
+						</div><!--//row-->
+					</div><!--//hero-summary-->
+				</div><!--//single-col-max-->
+			</div><!--//container-->
+
+		</section><!--//hero-section-->
+	</header><!--//header-->
+
+	<div class="sections-wrapper">
+
+		<div class="section-blocks mb-5">
+
+			<div id="section-overview" class="section-overview section pt-md-4 pt-lg-5">
+				<div class="container py-5">
+					<div class="section-col-max mx-auto">
+						<h3 class="section-title text-center mb-4">What Will You Learn</h3>
+						<p class="mb-4">@Model?.Course?.Description</p>
+
+						<!-- if not enrolled -->
+						<!-- <div class="text-center mb-5">
+							<a class="btn btn-primary scrollto" href="#section-pricing">Join Course Now</a>
+						</div> -->
+
+					</div><!--//section-col-max-->
+				</div><!--//container-->
+			</div><!--//section-overview-->
+
+
+
+
+
+			<div id="section-content" class="section-content section">
+				<div class="container py-5">
+					<div class="section-col-max mx-auto">
+						<h3 class="text-center mb-4">Course Content</h3>
+						<div class="accordion module-accordion" id="module-accordion">
+
+							<div class="module-item card">
+
+								<div id="module-1" class="module-content collapse show" aria-labelledby="module-heading-1">
+									<div class="card-body p-0">
+										@{
+											int i = 1;
+										}
+										@foreach (var lesson in Model?.Course?.Lessons)
+										{
+											<div class="module-sub-item p-3">
+												<div class="row justify-content-between">
+													<div class="col-9">
+														<span class="theme-text-secondary me-2">@i</span>
+														@{
+															i++;
+														}
+														<a class="video-play-trigger" href="#" data-bs-toggle="modal" data-bs-target="#modal-video">
+															@if (lesson.Iscompleted)
+															{
+																<i class="fas fa-circle-check fa-solid " style="color: #1cb048;"></i>
+															}
+															else
+															{
+																<i class="fas  fa-circle-check fa-regular fa-beat"></i>
+															}
+															@lesson.Title
+														</a>
+
+													</div>
+													<div class="col-3 text-end extra-info">02:30</div>
+												</div>
+											</div>
+											<!--//module-sub-item-->
+											<!-- Video Modal -->
+											<div class="modal modal-video" id="modal-video" tabindex="-1" role="dialog" aria-hidden="true">
+												<div class="modal-dialog">
+													<div class="modal-content">
+														<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
+														<div class="modal-body">
+															<div class="ratio ratio-16x9">
+																@if (!string.IsNullOrEmpty(lesson.FilePath))
+																{
+																	var originalUrl = lesson.FilePath;
+																	var videoId = ExtractYouTubeVideoId(originalUrl);
+																	var embedUrl = $"https://www.youtube.com/embed/{videoId}?enablejsapi=1";
+
+																	<iframe id="videoPlayer" width="560" height="315" src="@embedUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+																}
+															</div>
+														</div><!--//modal-body-->
+													</div><!--//modal-content-->
+												</div><!--//modal-dialog-->
+											</div>
+
+										} 
+
+									</div><!--//card-body-->
+								</div><!--//module-content-->
+							</div><!--//module-item-->
+							<!-- if not enrolled -->
+							<!-- <div class="text-center mt-5">
+									  <a class="btn btn-primary scrollto" href="#section-pricing">Enrol Now</a>
+								  </div>
+							</div> -->
+
+
+						</div><!--//container-->
+					</div><!--//section-content-->
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Javascript -->
+	<script src="@Url.Content("~/CrsLanding/assets/plugins/popper.min.js")"></script>
+	<script src="@Url.Content("~/CrsLanding/assets/plugins/bootstrap/js/bootstrap.min.js")"></script>
+	<script src="@Url.Content("~/CrsLanding/assets/js/main.js")"></script>
+
+	<script src="https://www.youtube.com/iframe_api"></script>
+	<script>
+		let timeWatched = 0; // Time in seconds
+		let lessonId; // Variable to hold the current lesson ID
+		let videoPlaying = false; // Flag to check if the video is playing
+		let trackTime; // Variable to store the interval for tracking time
+
+		// Function to be called when the player state changes
+		function onPlayerStateChange(event) {
+			if (event.data === YT.PlayerState.PLAYING) {
+				videoPlaying = true;
+				// Start tracking time when the video starts playing
+				trackTime = setInterval(() => {
+					if (videoPlaying) {
+						timeWatched++;
+						// Check if the user has watched at least 5 seconds
+						if (timeWatched >= 5) {
+							markLessonAsCompleted(lessonId);
+							clearInterval(trackTime); // Stop tracking time once completed
+						}
+					}
+				}, 1000); // Update every second
+			} else {
+				// If the video is paused or ended, stop tracking time
+				videoPlaying = false;
+				clearInterval(trackTime);
+			}
+		}
+
+		// Function to mark the lesson as completed
+		function markLessonAsCompleted(lessonId) {
+			fetch('/Enrollment/MarkLessonAsCompleted', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ LessonId: lessonId }), // Send the lesson ID
+			})
+				.then(response => {
+					if (response.ok) {
+						console.log('Lesson marked as completed!');
+					} else {
+						console.error('Error marking lesson as completed.');
+					}
+				})
+				.catch(error => {
+					console.error('Network error:', error);
+				});
+		}
+
+		// Function to play a new lesson
+		function playNewLesson(newLessonId) {
+			// Reset time watched when playing a new lesson
+			timeWatched = 0;
+			lessonId = newLessonId; // Set the current lesson ID
+			// Load the new lesson video (you need to implement this function)
+			loadVideo(lessonId); // Make sure you have a function to load the lesson video
+		}
+
+		// Function to load the video (this is a placeholder, implement according to your requirements)
+		function loadVideo(lessonId) {
+			// You might load the video by setting the source of an iframe or another method
+			// For example:
+			// const videoUrl = `https://www.youtube.com/embed/${lessonId}?enablejsapi=1`;
+			// document.getElementById('videoPlayer').src = videoUrl; // Assuming you have an iframe with this ID
+
+			// Optionally reset the player and any other states you need
+		}
+
+		// Example of how to set up the YouTube API and player
+		function onYouTubeIframeAPIReady() {
+			const player = new YT.Player('videoPlayer', {
+				events: {
+					'onStateChange': onPlayerStateChange // Link state change event
+				}
+			});
+		}
+
+		// Load the YouTube API script asynchronously
+		const tag = document.createElement('script');
+		tag.src = "https://www.youtube.com/iframe_api";
+		const firstScriptTag = document.getElementsByTagName('script')[0];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+	</script>
+
+
+
+</body>
+

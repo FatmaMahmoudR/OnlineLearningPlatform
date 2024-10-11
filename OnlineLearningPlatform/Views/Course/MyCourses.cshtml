@@ -52,17 +52,21 @@
                         <text>
                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
                             <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-primary">Delete</a> |
-                        </text>
-                    }
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Manage</a>
 
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <p class="bg-danger"> Progress </p>
+                        </text>
+
+
+                       
                     }
+
 
                 </td>
             </tr>
+            
         }
     </tbody>
 </table>
+
+
+<p class="bg-danger"> Content control will be added in "manage" , insha'Allah. </p>

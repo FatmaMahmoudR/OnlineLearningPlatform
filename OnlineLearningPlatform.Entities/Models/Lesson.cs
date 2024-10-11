@@ -16,10 +16,12 @@ namespace OnlineLearningPlatform.Entities.Models
         public int CourseId { get; set; } // FK -> Course
         public string Title { get; set; }
 
-        public string? ContentFilePath { get; set; }
+        public string? FilePath { get; set; }
 
-        // nav prop
-        public Course? Course { get; set; }
+        public bool Iscompleted { get; set; } = false;
+
+		// nav prop
+		public Course? Course { get; set; }
         
     }
 

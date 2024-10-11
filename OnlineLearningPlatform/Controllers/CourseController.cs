@@ -66,8 +66,10 @@ namespace OnlineLearningPlatform.Controllers
             }
 
             var course = await _context.Courses
+                .Include(c=>c.Lessons)
                 .Include(c => c.Instructor)
                 .ThenInclude(i => i.AppUser)
+                
                 .FirstOrDefaultAsync(c => c.Id == id && !EF.Property<bool>(c, "Deleted")); // Check if not deleted
 
             if (course == null)
@@ -77,6 +79,9 @@ namespace OnlineLearningPlatform.Controllers
 
             return View(course);
         }
+
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -350,35 +355,21 @@ namespace OnlineLearningPlatform.Controllers
         }
 
 
-        [Authorize(Roles = "Instructor, Student")]
+        [Authorize(Roles = "Instructor")]
         public async Task<IActionResult> MyCourses()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             IQueryable<Course> courses = _context.Courses
                 .Include(c => c.Instructor)
                 .ThenInclude(i => i.AppUser);
-
-            if (User.IsInRole("Instructor"))
-            {
-                // If the user is an instructor, show their taught courses
+            
                 var instructorId = await _context.Instructors
                     .Where(i => i.AppUserId == userId)
                     .Select(i => i.Id)
                     .FirstOrDefaultAsync();
 
                 courses = courses.Where(c => c.InstructorId == instructorId);
-            }
-            else if (User.IsInRole("Student"))
-            {
-                // If the user is a student, show their enrolled courses
-                var studentId = await _context.Students
-                    .Where(s => s.AppUserId == userId)
-                    .Select(s => s.Id)
-                    .FirstOrDefaultAsync();
-
-                courses = courses.Where(c => c.Enrollments.Any(e => e.StudentId == studentId));
-            }
-
+                      
             return View(await courses.ToListAsync());
         }
 

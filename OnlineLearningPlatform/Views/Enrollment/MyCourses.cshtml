@@ -1,0 +1,70 @@
+﻿@model IEnumerable<OnlineLearningPlatform.Models.Enrollment>
+
+@{
+    ViewData["Title"] = "MyCourses";
+}
+
+<h1>MyCourses</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Course.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Course.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Course.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Course.DifficultyLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Course.EnrollmentCount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Course.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Course.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Course.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Course.DifficultyLevel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Course.EnrollmentCount)
+                </td>
+                <td>
+                    @if (item.CompletionStatus == OnlineLearningPlatform.Helpers.CompletionStatus.NotStarted)
+                    {
+                        <a asp-controller="Enrollment" asp-action="Details" asp-route-id="@item.CourseId" class="btn btn-primary">Start</a>
+
+                    }
+                    @if (item.CompletionStatus == OnlineLearningPlatform.Helpers.CompletionStatus.InProgress)
+                    {
+                        <a asp-controller="Enrollment" asp-action="Details" asp-route-id="@item.CourseId" class="btn btn-primary">Continue your Learning</a>
+
+                    }
+                    @if (item.CompletionStatus == OnlineLearningPlatform.Helpers.CompletionStatus.Completed)
+                    {
+                        <a asp-controller="Enrollment" asp-action="Details" asp-route-id="@item.CourseId" class="btn btn-primary">item.CompletionStatus</a>
+
+                    }
+
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

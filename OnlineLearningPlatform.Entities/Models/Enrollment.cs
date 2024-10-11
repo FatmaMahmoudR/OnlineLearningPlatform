@@ -1,21 +1,23 @@
-﻿using OnlineLearningPlatform.Models;
-using OnlineLearningPlatform.Helpers;
+﻿using OnlineLearningPlatform.Helpers;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class Enrollment
+namespace OnlineLearningPlatform.Models
 {
-    public int Id { get; set; }
-    
+    public class Enrollment
+    {
+        public int Id { get; set; }
 
-    [ForeignKey("Student")]
-    public int StudentId { get; set; }  // FK -> Student Id
-    public Student Student { get; set; }
 
-    [ForeignKey("Course")]
-    public int CourseId { get; set; }  // FK -> Course Id
-    public Course Course { get; set; }
+        [ForeignKey("Student")]
+        public int StudentId { get; set; }  // FK -> Student Id
+        public Student Student { get; set; }
 
-    public DateTime EnrollmentDate { get; set; }
-    public CompletionStatus CompletionStatus { get; set; }
-    public int Progress { get; set; }  // 0-100 percentage
+        [ForeignKey("Course")]
+        public int CourseId { get; set; }  // FK -> Course Id
+        public Course Course { get; set; }
+
+        public DateTime EnrollmentDate { get; set; }
+        public CompletionStatus CompletionStatus { get; set; }
+        public int Progress { get; set; }  // 0-100 percentage
+    }
 }

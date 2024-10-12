@@ -137,25 +137,24 @@
 														@{
 															i++;
 														}
-														<a class="video-play-trigger" href="#" data-bs-toggle="modal" data-bs-target="#modal-video">
+														<a class="video-play-trigger" href="#" data-bs-toggle="modal" data-bs-target="#modal-video-@lesson.Id">
 															@if (lesson.Iscompleted)
 															{
 																<i class="fas fa-circle-check fa-solid " style="color: #1cb048;"></i>
 															}
 															else
 															{
-																<i class="fas  fa-circle-check fa-regular fa-beat"></i>
+																<i class="fas fa-circle-check fa-regular fa-beat"></i>
 															}
 															@lesson.Title
 														</a>
-
 													</div>
 													<div class="col-3 text-end extra-info">02:30</div>
 												</div>
 											</div>
-											<!--//module-sub-item-->
-											<!-- Video Modal -->
-											<div class="modal modal-video" id="modal-video" tabindex="-1" role="dialog" aria-hidden="true">
+
+											<!-- Video Modal with unique ID -->
+											<div class="modal modal-video" id="modal-video-@lesson.Id" tabindex="-1" role="dialog" aria-hidden="true">
 												<div class="modal-dialog">
 													<div class="modal-content">
 														<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
@@ -165,17 +164,17 @@
 																{
 																	var originalUrl = lesson.FilePath;
 																	var videoId = ExtractYouTubeVideoId(originalUrl);
-																	var embedUrl = $"https://www.youtube.com/embed/{videoId}?enablejsapi=1";
+																	var embedUrl = $"https://www.youtube.com/embed/{videoId}";
 
-																	<iframe id="videoPlayer" width="560" height="315" src="@embedUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+																	<iframe id="videoPlayer-@lesson.Id" width="560" height="315" src="@embedUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 																}
 															</div>
-														</div><!--//modal-body-->
-													</div><!--//modal-content-->
-												</div><!--//modal-dialog-->
+														</div>
+													</div>
+												</div>
 											</div>
+										}
 
-										} 
 
 									</div><!--//card-body-->
 								</div><!--//module-content-->
@@ -201,7 +200,7 @@
 	<script src="@Url.Content("~/CrsLanding/assets/plugins/bootstrap/js/bootstrap.min.js")"></script>
 	<script src="@Url.Content("~/CrsLanding/assets/js/main.js")"></script>
 
-	<script src="https://www.youtube.com/iframe_api"></script>
+	@* <script src="https://www.youtube.com/iframe_api"></script>
 	<script>
 		let timeWatched = 0; // Time in seconds
 		let lessonId; // Variable to hold the current lesson ID
@@ -285,7 +284,7 @@
 		const firstScriptTag = document.getElementsByTagName('script')[0];
 		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-	</script>
+	</script> *@
 
 
 

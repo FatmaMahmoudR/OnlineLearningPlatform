@@ -100,7 +100,6 @@ namespace OnlineLearningPlatform.Models
                     NormalizedUserName = "ADMIN",
                     Email = "admin@admin.com",
                     NormalizedEmail = "ADMIN@ADMIN.COM",
-                    PhoneNumber = "1234567890",  // Adding phone number here
                     PasswordHash = hasher.HashPassword(null, "123"),
                     EmailConfirmed = true
                 },
@@ -111,23 +110,40 @@ namespace OnlineLearningPlatform.Models
                     NormalizedUserName = "INSTRUCTOR1",
                     Email = "instructor1@user.com",
                     NormalizedEmail = "INSTRUCTOR1@USER.COM",
-                    PhoneNumber = "0987654321",  // Adding phone number here
                     PasswordHash = hasher.HashPassword(null, "123"),
                     EmailConfirmed = true
                 },
-                  new AppUser
-                  {
-                      Id = "62fe5285-fd68-4711-ae93-673787f4a111", // Student 1
-                      UserName = "student1",
-                      NormalizedUserName = "STUDENT1",
-                      Email = "student1@user.com",
-                      NormalizedEmail = "STUDENT1@USER.COM",
-                      PhoneNumber = "5556667777",  // Adding phone number here
-                      PasswordHash = hasher.HashPassword(null, "123"),
-                      EmailConfirmed = true
-                  }
+                new AppUser
+                {
+                    Id = "62fe5285-fd68-4711-ae93-673787f4a002", // Instructor 2
+                    UserName = "instructor2",
+                    NormalizedUserName = "INSTRUCTOR2",
+                    Email = "instructor2@user.com",
+                    NormalizedEmail = "INSTRUCTOR2@USER.COM",
+                    PasswordHash = hasher.HashPassword(null, "123"),
+                    EmailConfirmed = true
+                },
+                new AppUser
+                {
+                    Id = "62fe5285-fd68-4711-ae93-673787f4a111", // Student 1
+                    UserName = "student1",
+                    NormalizedUserName = "STUDENT1",
+                    Email = "student1@user.com",
+                    NormalizedEmail = "STUDENT1@USER.COM",
+                    PasswordHash = hasher.HashPassword(null, "123"),
+                    EmailConfirmed = true
+                },
+                new AppUser
+                {
+                    Id = "62fe5285-fd68-4711-ae93-673787f4a112", // Student 2
+                    UserName = "student2",
+                    NormalizedUserName = "STUDENT2",
+                    Email = "student2@user.com",
+                    NormalizedEmail = "STUDENT2@USER.COM",
+                    PasswordHash = hasher.HashPassword(null, "123"),
+                    EmailConfirmed = true
+                }
             );
-
 
             // Seeding relations between our users and roles to AspNetUserRoles table
             builder.Entity<IdentityUserRole<string>>().HasData(

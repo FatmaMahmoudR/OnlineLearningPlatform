@@ -162,7 +162,7 @@ namespace OnlineLearningPlatform.Controllers
 
 
         // GET: /Course/Edit/5
-        [Authorize(Roles = "Admin,Instructor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -203,7 +203,7 @@ namespace OnlineLearningPlatform.Controllers
         // POST: /Course/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Instructor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, Course course)
         {
             if (id != course.Id)
@@ -259,7 +259,7 @@ namespace OnlineLearningPlatform.Controllers
 
 
         // GET: /Course/Delete/5
-        [Authorize(Roles = "Admin,Instructor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -302,7 +302,7 @@ namespace OnlineLearningPlatform.Controllers
         // POST: /Course/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Instructor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var course = await _context.Courses

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,105 +12,120 @@ using OnlineLearningPlatform.Models;
 
 namespace OnlineLearningPlatform.App.Controllers
 {
-
-    [Authorize(Roles ="Instructor")]
+    [Authorize(Roles = "Instructor")]
     public class LessonController : Controller
     {
-        private readonly context _context;
+         private readonly context _context;
+        private readonly UserManager<AppUser> _userManager; 
 
-        public LessonController(context context)
+        public LessonController(context context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager; 
         }
 
-        // GET: Module
-        // GET: /Module/Index?courseId=1
-        public async Task<IActionResult> Index(int courseId)
-        {
-            var course = await _context.Courses
-                                       .Include(c => c.Lessons)
-                                       .FirstOrDefaultAsync(c => c.Id == courseId && !EF.Property<bool>(c, "Deleted"));
+        //// GET: /Lesson/Index?courseId=1
+        //public async Task<IActionResult> Index(int courseId)
+        //{
+        //    var instructorId = await _context.Instructors
+        //        .Where(i => i.AppUserId == _userManager.GetUserId(User))
+        //        .Select(i => i.Id)
+        //        .FirstOrDefaultAsync();
 
-            if (course == null)
-            {
-                return NotFound();
-            }
+        //    var course = await _context.Courses
+        //                               .Include(c => c.Lessons)
+        //                               .FirstOrDefaultAsync(c => c.Id == courseId && c.InstructorId == instructorId && !EF.Property<bool>(c, "Deleted"));
 
-            ViewBag.CourseId = courseId;
-            ViewBag.CourseTitle = course.Name;
-            return View(course.Lessons);
-        }
+        //    if (course == null)
+        //    {
+        //        return NotFound();
+        //    }
 
+        //    ViewBag.CourseId = courseId;
+        //    ViewBag.CourseTitle = course.Name;
+        //    return View(course.Lessons);
+        //}
 
         // GET: /Lesson/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var lesson = await _context.Lessons.FirstOrDefaultAsync(m => m.Id == id );
+            var lesson = await _context.Lessons
+                .Include(l => l.Course) 
+                .FirstOrDefaultAsync(l => l.Id == id);
+
+            if (lesson == null || lesson.Course.InstructorId != (await _context.Instructors.Where(i => i.AppUserId == _userManager.GetUserId(User)).Select(i => i.Id).FirstOrDefaultAsync()))
+            {
+                return NotFound();
+            }
+
+            return View(lesson);
+        }
+
+        // GET: /Lesson/Create?courseId=1
+        public async Task<IActionResult> Create(int courseId)
+        {
+            var instructorId = await _context.Instructors
+                .Where(i => i.AppUserId == _userManager.GetUserId(User))
+                .Select(i => i.Id)
+                .FirstOrDefaultAsync();
+
+            var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == courseId && c.InstructorId == instructorId);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            ViewBag.CourseId = courseId;
+            var lesson = new Lesson();
+            return View(lesson);
+        }
+
+        // POST: /Lesson/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Lesson lesson)
+        {
+            if (ModelState.IsValid)
+            {
+                lesson.Course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == lesson.CourseId);
+                _context.Lessons.Add(lesson);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", "Course", new { id = lesson.CourseId });
+
+                
+            }
+            ViewBag.CourseId = lesson.CourseId;
+            return View(lesson);
+        }
+
+        // GET: /Lesson/Edit/5
+        public async Task<IActionResult> Edit(int id)
+        {
+            // Include the Course when loading the Lesson
+            var lesson = await _context.Lessons
+                .Include(l => l.Course)
+                .FirstOrDefaultAsync(m => m.Id == id && !EF.Property<bool>(m, "Deleted"));
 
             if (lesson == null)
             {
                 return NotFound();
             }
 
-            return View(lesson);
-        }
+            // Check if the current user is the instructor of the course
+            var instructorId = await _context.Instructors
+                .Where(i => i.AppUserId == _userManager.GetUserId(User))
+                .Select(i => i.Id)
+                .FirstOrDefaultAsync();
 
-
-
-
-        // GET: /Lesson/Create?courseId=1
-        public IActionResult Create(int courseId)
-        {
-            var course = _context.Courses.FirstOrDefault(c => c.Id == courseId);
-            if (course == null)
+            if (lesson.Course.InstructorId != instructorId)
             {
-                return NotFound();
+                return Forbid();
             }
-            ViewBag.CourseId = courseId;
-            var l = new Lesson();           
-            return View(l);
-        }
 
-        // POST: /Module/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Lesson lesson)
-        {   
-            if (ModelState.IsValid)
-            {
-                lesson.Course=_context.Courses.FirstOrDefault(c=>c.Id == lesson.CourseId);
-                _context.Lessons.Add(lesson);
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), new { courseId = lesson.CourseId });
-            }
             ViewBag.CourseId = lesson.CourseId;
             return View(lesson);
         }
 
-
-
-
-
-
-
-        // GET: Module/Edit/5
-        public async Task<IActionResult> Edit(int id)
-        {
-            var module = await _context.Lessons
-                .FirstOrDefaultAsync(m => m.Id == id && !EF.Property<bool>(m, "Deleted"));
-
-            if (module == null)
-            {
-                return NotFound();
-            }
-
-            ViewBag.CourseId = module.CourseId;
-
-            return View(module);
-        }
-
-        // POST: Module/Edit/5
+        // POST: /Lesson/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Lesson lesson)
@@ -123,47 +139,65 @@ namespace OnlineLearningPlatform.App.Controllers
             {
                 try
                 {
-                    var currLesson = await _context.Lessons.FindAsync(id);
+                    // Include the Course when loading the Lesson
+                    var currLesson = await _context.Lessons
+                        .Include(l => l.Course)
+                        .FirstOrDefaultAsync(l => l.Id == id);
 
                     if (currLesson == null)
                     {
                         return NotFound();
                     }
 
+                    // Check if the current user is the instructor of the course
+                    var instructorId = await _context.Instructors
+                        .Where(i => i.AppUserId == _userManager.GetUserId(User))
+                        .Select(i => i.Id)
+                        .FirstOrDefaultAsync();
+
+                    if (currLesson.Course.InstructorId != instructorId)
+                    {
+                        return Forbid();
+                    }
+
+                    // Update the lesson's properties
                     currLesson.Title = lesson.Title;
+                    currLesson.FilePath = lesson.FilePath;
+                    currLesson.Iscompleted = lesson.Iscompleted;
 
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ModuleExists(lesson.Id))
+                    if (!LessonExists(lesson.Id))
                     {
                         return NotFound();
                     }
                     else
                     {
-                        throw; 
+                        throw;
                     }
                 }
-                return RedirectToAction(nameof(Index), new { courseId = lesson.CourseId });
 
+                // Redirect to the course details page
+                return RedirectToAction("Details", "Course", new { id = lesson.CourseId });
             }
 
             return View(lesson);
         }
 
-
-
-
+        private bool LessonExists(int id)
+        {
+            return _context.Lessons.Any(e => e.Id == id);
+        }
 
         // GET: /Lesson/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var lesson = await _context.Lessons
-                                       .Include(l => l.Course)
-                                       .FirstOrDefaultAsync(l => l.Id == id && !EF.Property<bool>(l, "Deleted"));
+            var lesson = await _context.Lessons.Include(l => l.Course)
+                .FirstOrDefaultAsync(l => l.Id == id && !EF.Property<bool>(l, "Deleted"));
 
-            if (lesson == null)
+            if (lesson == null || lesson.Course.InstructorId != (await _context.Instructors.Where(i => i.AppUserId == _userManager.GetUserId(User)).Select(i => i.Id).FirstOrDefaultAsync()))
             {
                 return NotFound();
             }
@@ -184,12 +218,10 @@ namespace OnlineLearningPlatform.App.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToAction(nameof(Index), new { courseId = lesson.CourseId });
+            return RedirectToAction("Details", "Course", new { id = lesson.CourseId });
         }
 
-        private bool ModuleExists(int id)
-        {
-            return _context.Lessons.Any(e => e.Id == id && !EF.Property<bool>(e, "Deleted"));
-        }
+     
+
     }
 }

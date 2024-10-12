@@ -71,7 +71,7 @@
 						<div class="row">
 							<div class="item col-4">
 								<div class="summary-desc mb-1"><i class="icon fas fa-video me-2"></i>Content</div>
-								<h4 class="summary-heading">80+ <span class="desc">Videos</span></h4>
+								<h4 class="summary-heading"> @Model.Lessons.Count <span class="desc">Videos</span></h4>
 
 							</div><!--//col-->
 							<div class="item col-4">
@@ -115,6 +115,17 @@
 
 
 
+			<!-- Control Options for Instructor -->
+			@if (User.IsInRole("Instructor")) // Check if the user is an instructor
+			{
+				<div class="text-center mb-5">
+					<a style="text-decoration: none;" href="@Url.Action("Create", "Lesson", new { courseId = Model.Id })" class="btn btn-success me-2">Add New Lesson</a>
+					</div>
+			}
+
+
+
+
 			<div id="section-content" class="section-content section">
 				<div class="container py-5">
 					<div class="section-col-max mx-auto">
@@ -147,7 +158,16 @@
 														</a>
 														
 													</div>
-													<div class="col-3 text-end extra-info">02:30</div>
+													<div class ="text-end ">
+														<!-- Edit and Delete buttons beside each lesson -->
+														@if (User.IsInRole("Instructor")) // Check if the user is an instructor
+														{
+															<a style="text-decoration: none;"href="@Url.Action("Edit", "Lesson", new { id = lesson.Id })" class="btn btn-outline-warning btn-sm">Edit</a>
+															<a style="text-decoration: none;" href="@Url.Action("Delete", "Lesson", new { id = lesson.Id })" class="btn btn-outline-danger btn-sm">Delete</a>
+														}
+													</div>
+
+												
 												</div>
 											</div>
 											<!--//module-sub-item-->
@@ -205,11 +225,3 @@
 
 
 </body>
-
-
-
-
-
-		
-			
-

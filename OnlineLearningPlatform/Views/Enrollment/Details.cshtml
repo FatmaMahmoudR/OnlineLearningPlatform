@@ -200,91 +200,72 @@
 	<script src="@Url.Content("~/CrsLanding/assets/plugins/bootstrap/js/bootstrap.min.js")"></script>
 	<script src="@Url.Content("~/CrsLanding/assets/js/main.js")"></script>
 
-	@* <script src="https://www.youtube.com/iframe_api"></script>
-	<script>
-		let timeWatched = 0; // Time in seconds
-		let lessonId; // Variable to hold the current lesson ID
-		let videoPlaying = false; // Flag to check if the video is playing
-		let trackTime; // Variable to store the interval for tracking time
+@* 
+	 <script>
+	 	// Load the YouTube IFrame Player API code asynchronously
+	 	var tag = document.createElement('script');
+	 	tag.src = "https://www.youtube.com/iframe_api";
+	 	var firstScriptTag = document.getElementsByTagName('script')[0];
+	 	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-		// Function to be called when the player state changes
-		function onPlayerStateChange(event) {
-			if (event.data === YT.PlayerState.PLAYING) {
-				videoPlaying = true;
-				// Start tracking time when the video starts playing
-				trackTime = setInterval(() => {
-					if (videoPlaying) {
-						timeWatched++;
-						// Check if the user has watched at least 5 seconds
-						if (timeWatched >= 5) {
-							markLessonAsCompleted(lessonId);
-							clearInterval(trackTime); // Stop tracking time once completed
-						}
-					}
-				}, 1000); // Update every second
-			} else {
-				// If the video is paused or ended, stop tracking time
-				videoPlaying = false;
-				clearInterval(trackTime);
-			}
-		}
+	 	// Define the player variable
+	 	var players = {}; // Object to hold player instances
 
-		// Function to mark the lesson as completed
-		function markLessonAsCompleted(lessonId) {
-			fetch('/Enrollment/MarkLessonAsCompleted', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ LessonId: lessonId }), // Send the lesson ID
-			})
-				.then(response => {
-					if (response.ok) {
-						console.log('Lesson marked as completed!');
-					} else {
-						console.error('Error marking lesson as completed.');
-					}
-				})
-				.catch(error => {
-					console.error('Network error:', error);
-				});
-		}
+	 	// This function is called when the IFrame API is ready to create a player
+	 	function onYouTubeIframeAPIReady() {
+	 		// Initialize players for each video in the modal
+	 		document.querySelectorAll('.modal-video').forEach(function (modal) {
+	 			var lessonId = modal.id.replace('modal-video-', '');
+	 			var iframe = modal.querySelector('iframe');
 
-		// Function to play a new lesson
-		function playNewLesson(newLessonId) {
-			// Reset time watched when playing a new lesson
-			timeWatched = 0;
-			lessonId = newLessonId; // Set the current lesson ID
-			// Load the new lesson video (you need to implement this function)
-			loadVideo(lessonId); // Make sure you have a function to load the lesson video
-		}
+	 			players[lessonId] = new YT.Player(iframe, {
+	 				// No need for events related to state changes since we are marking on open
+	 			});
 
-		// Function to load the video (this is a placeholder, implement according to your requirements)
-		function loadVideo(lessonId) {
-			// You might load the video by setting the source of an iframe or another method
-			// For example:
-			// const videoUrl = `https://www.youtube.com/embed/${lessonId}?enablejsapi=1`;
-			// document.getElementById('videoPlayer').src = videoUrl; // Assuming you have an iframe with this ID
+	 			// Add an event listener to mark the lesson as completed when the modal opens
+	 			modal.addEventListener('show.bs.modal', function () {
+	 				markLessonCompleted(lessonId); // Mark the lesson as completed
+	 			});
+	 		});
+	 	}
 
-			// Optionally reset the player and any other states you need
-		}
+	 	// Function to mark the lesson as completed via AJAX
+	 	function markLessonCompleted(lessonId) {
+	 		const enrollmentId = /* Your logic to get enrollment ID */;
 
-		// Example of how to set up the YouTube API and player
-		function onYouTubeIframeAPIReady() {
-			const player = new YT.Player('videoPlayer', {
-				events: {
-					'onStateChange': onPlayerStateChange // Link state change event
-				}
-			});
-		}
+	 		fetch('/Enrollment/MarkLessonCompleted', {
+	 			method: 'POST',
+	 			headers: {
+	 				'Content-Type': 'application/json'
+	 			},
+	 			body: JSON.stringify({ enrollmentId: enrollmentId, lessonId: lessonId })
+	 		})
+	 			.then(response => {
+	 				if (!response.ok) {
+	 					throw new Error('Network response was not ok');
+	 				}
+	 				return response.json();
+	 			})
+	 			.then(data => {
+	 				if (data.success) {
+	 					console.log('Lesson marked as completed successfully for lesson ID: ' + lessonId);
+	 					// Optionally, update the UI to reflect the lesson is completed
+	 					document.querySelector(`#modal-video-${lessonId} .video-play-trigger i`).classList.remove('fa-regular');
+	 					document.querySelector(`#modal-video-${lessonId} .video-play-trigger i`).classList.add('fa-solid', 'fa-circle-check');
+	 					// Show a success message or notification to the user
+	 				} else {
+	 					console.error(data.message);
+	 					// Optionally, display the error message to the user
+	 				}
+	 			})
+	 			.catch(error => {
+	 				console.error('There was a problem with the fetch operation:', error);
+	 				// Optionally, handle the error here (e.g., notify the user)
+	 			});
+	 	}
 
-		// Load the YouTube API script asynchronously
-		const tag = document.createElement('script');
-		tag.src = "https://www.youtube.com/iframe_api";
-		const firstScriptTag = document.getElementsByTagName('script')[0];
-		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-	</script> *@
+	 </script> *@
 
 
 

@@ -227,11 +227,7 @@ namespace OnlineLearningPlatform.Models
             );
 
 
-            builder.Entity<Lesson>().HasData(
-                new Lesson { Id = 1, CourseId = 1, Title = "Introduction to ASP.NET Core" },
-                new Lesson { Id = 2, CourseId = 1, Title = "Controllers and Views" },
-                new Lesson { Id = 3, CourseId = 2, Title = "Getting Started with EF Core" }
-            );
+            
 
 			builder.Entity<Lesson>().HasData(
 			new Lesson { Id = 1, CourseId = 1, Title = "Introduction to ASP.NET Core", FilePath = "https://youtu.be/qBTe6uHJS_Y?si=bnOHK8WHLtxAP13Y", Iscompleted = false },

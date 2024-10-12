@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Entities.Models;
 using OnlineLearningPlatform.Models;
+using System.Net;
 using System.Security.Claims;
 
 namespace OnlineLearningPlatform.App.Controllers
@@ -93,38 +95,39 @@ namespace OnlineLearningPlatform.App.Controllers
         }
 
 
+
 		[HttpPost]
-		public async Task<IActionResult> MarkLessonAsCompleted([FromBody] LessonCompletionDto dto)
+		public async Task<IActionResult> MarkLessonCompleted(int enrollmentId, int lessonId)
 		{
-			if (dto.LessonId > 0)
+			// Validate input parameters
+			if (enrollmentId <= 0 || lessonId <= 0)
 			{
-				var lesson = await _context.Lessons.FindAsync(dto.LessonId);
+				return BadRequest(new { success = false, message = "Invalid enrollment or lesson ID." });
+			}
+
+			
+			var enrollment = await _context.Enrollments
+										   .Include(e => e.Course)
+										   .ThenInclude(c => c.Lessons)
+										   .FirstOrDefaultAsync(e => e.Id == enrollmentId);
+
+			if (enrollment != null)
+			{
+				
+				var lesson = enrollment.Course.Lessons.FirstOrDefault(l => l.Id == lessonId);
+
 				if (lesson != null)
 				{
-					lesson.Iscompleted = true; // Mark the lesson as completed
-					await _context.SaveChangesAsync();
-					return Ok(); // Return a success response
-				}
-				else
-				{
-					// Log or handle the case where the lesson is not found
-					Console.WriteLine($"Lesson with ID {dto.LessonId} not found.");
+					lesson.Iscompleted = true;
+					await _context.SaveChangesAsync(); 
+					return Ok(new { success = true });
 				}
 			}
-			else
-			{
-				// Log or handle invalid LessonId
-				Console.WriteLine("Invalid LessonId.");
-			}
-			return BadRequest(); // Return an error response if lesson not found
+
+			return BadRequest(new { success = false, message = "Enrollment or lesson not found." });
 		}
-
-
-
-
-
-
-
+	
+	
 
 
 

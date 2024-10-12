@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,12 @@ namespace OnlineLearningPlatform.Controllers
     public class CourseController : Controller
     {
         private readonly context _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public CourseController(context context)
+        public CourseController(context context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [AllowAnonymous]
@@ -32,6 +35,8 @@ namespace OnlineLearningPlatform.Controllers
             return View(courses);
         }
 
+
+        [AllowAnonymous]
         [HttpGet]
         [Route("Course/Search")]
         public async Task<IActionResult> Index(string searchString)  // dah b2a will be executed lma yb2a feh input in the search
@@ -61,8 +66,10 @@ namespace OnlineLearningPlatform.Controllers
             }
 
             var course = await _context.Courses
+                .Include(c=>c.Lessons)
                 .Include(c => c.Instructor)
                 .ThenInclude(i => i.AppUser)
+                
                 .FirstOrDefaultAsync(c => c.Id == id && !EF.Property<bool>(c, "Deleted")); // Check if not deleted
 
             if (course == null)
@@ -72,6 +79,9 @@ namespace OnlineLearningPlatform.Controllers
 
             return View(course);
         }
+
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -148,8 +158,11 @@ namespace OnlineLearningPlatform.Controllers
             return View(course);
         }
 
+
+
+
         // GET: /Course/Edit/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Instructor")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -157,11 +170,27 @@ namespace OnlineLearningPlatform.Controllers
                 return NotFound();
             }
 
-            var course = await _context.Courses.Include(c => c.Instructor).FirstOrDefaultAsync(c => c.Id == id && !EF.Property<bool>(c, "Deleted")); // Check if not deleted
+            var course = await _context.Courses
+                .Include(c => c.Instructor)
+                .FirstOrDefaultAsync(c => c.Id == id && !EF.Property<bool>(c, "Deleted")); // Check if not deleted
 
             if (course == null)
             {
                 return NotFound();
+            }
+
+            // Ensure instructors can only edit their own courses
+            if (User.IsInRole("Instructor"))
+            {
+                var instructorId = await _context.Instructors
+                    .Where(i => i.AppUserId == _userManager.GetUserId(User))
+                    .Select(i => i.Id)
+                    .FirstOrDefaultAsync();
+
+                if (course.InstructorId != instructorId)
+                {
+                    return Unauthorized();
+                }
             }
 
             var instructors = await _context.Instructors.Include(i => i.AppUser).ToListAsync();
@@ -174,12 +203,26 @@ namespace OnlineLearningPlatform.Controllers
         // POST: /Course/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Instructor")]
         public async Task<IActionResult> Edit(int id, Course course)
         {
             if (id != course.Id)
             {
                 return NotFound();
+            }
+
+            // Ensure instructors can only edit their own courses
+            if (User.IsInRole("Instructor"))
+            {
+                var instructorId = await _context.Instructors
+                    .Where(i => i.AppUserId == _userManager.GetUserId(User))
+                    .Select(i => i.Id)
+                    .FirstOrDefaultAsync();
+
+                if (course.InstructorId != instructorId)
+                {
+                    return Unauthorized();
+                }
             }
 
             if (ModelState.IsValid)
@@ -213,18 +256,19 @@ namespace OnlineLearningPlatform.Controllers
 
 
 
+
+
         // GET: /Course/Delete/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Instructor")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            // Retrieve the course while ignoring query filters
+            
             var course = await _context.Courses
-                .IgnoreQueryFilters() // Ignore filters to find by ID regardless of deletion status
+                .IgnoreQueryFilters() 
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (course == null)
@@ -232,11 +276,24 @@ namespace OnlineLearningPlatform.Controllers
                 return NotFound();
             }
 
-            // Check if the course is marked as deleted using the shadow property
-            // Note: No await here; accessing a shadow property is synchronous
+            // Check if the course is deleted 
             if (_context.Entry(course).Property<bool>("Deleted").CurrentValue)
             {
                 return NotFound();
+            }
+
+            // Ensure instructors can only delete their own courses
+            if (User.IsInRole("Instructor"))
+            {
+                var instructorId = await _context.Instructors
+                    .Where(i => i.AppUserId == _userManager.GetUserId(User))
+                    .Select(i => i.Id)
+                    .FirstOrDefaultAsync();
+
+                if (course.InstructorId != instructorId)
+                {
+                    return Unauthorized();
+                }
             }
 
             return View(course);
@@ -245,12 +302,11 @@ namespace OnlineLearningPlatform.Controllers
         // POST: /Course/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Instructor")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            // Retrieve the course while ignoring query filters
             var course = await _context.Courses
-                .IgnoreQueryFilters() // Ensure we can find the course regardless of deletion status
+                .IgnoreQueryFilters() 
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (course == null)
@@ -258,22 +314,64 @@ namespace OnlineLearningPlatform.Controllers
                 return NotFound();
             }
 
+            // Ensure instructors can only delete their own courses
+            if (User.IsInRole("Instructor"))
+            {
+                var instructorId = await _context.Instructors
+                    .Where(i => i.AppUserId == _userManager.GetUserId(User))
+                    .Select(i => i.Id)
+                    .FirstOrDefaultAsync();
+
+                if (course.InstructorId != instructorId)
+                {
+                    return Unauthorized();
+                }
+            }
+
             // Set the shadow property to true for soft delete
             _context.Entry(course).Property("Deleted").CurrentValue = true;
 
-            // Optionally mark the entity as modified (not always necessary)
             _context.Courses.Update(course);
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            // Redirect based on the user role
+            if (User.IsInRole("Instructor"))
+            {
+                return RedirectToAction("MyCourses", "Course"); 
+            }
+            //admin
+            return RedirectToAction(nameof(Index)); 
         }
+
+
 
 
         // Helper method to check if a course exists
         private bool CourseExists(int id)
         {
-            // Check for non-deleted courses
+           
             return _context.Courses.Any(e => e.Id == id && !EF.Property<bool>(e, "Deleted"));
         }
+
+
+        [Authorize(Roles = "Instructor")]
+        public async Task<IActionResult> MyCourses()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            IQueryable<Course> courses = _context.Courses
+                .Include(c => c.Instructor)
+                .ThenInclude(i => i.AppUser);
+            
+                var instructorId = await _context.Instructors
+                    .Where(i => i.AppUserId == userId)
+                    .Select(i => i.Id)
+                    .FirstOrDefaultAsync();
+
+                courses = courses.Where(c => c.InstructorId == instructorId);
+                      
+            return View(await courses.ToListAsync());
+        }
+
     }
 }

@@ -1,0 +1,15 @@
+﻿@model OnlineLearningPlatform.Entities.Models.Lesson
+
+@{
+    ViewData["Title"] = "Module Details";
+}
+
+<h1>@Model.Title</h1>
+
+<h3>Lessons</h3>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    <a asp-action="Index">Back to List</a>
+
+</div>

@@ -17,43 +17,10 @@ namespace OnlineLearningPlatform.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Enrollment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CompletionStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EnrollmentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Progress")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Enrollments");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -274,35 +241,6 @@ namespace OnlineLearningPlatform.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ContentFilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ModuleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ModuleId");
-
-                    b.ToTable("Lesson");
-                });
-
-            modelBuilder.Entity("OnlineLearningPlatform.Entities.Models.Module", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
@@ -310,6 +248,12 @@ namespace OnlineLearningPlatform.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Iscompleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -319,26 +263,56 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Modules");
+                    b.ToTable("Lessons");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             CourseId = 1,
+                            FilePath = "https://youtu.be/qBTe6uHJS_Y?si=bnOHK8WHLtxAP13Y",
+                            Iscompleted = false,
                             Title = "Introduction to ASP.NET Core"
                         },
                         new
                         {
                             Id = 2,
                             CourseId = 1,
+                            FilePath = "https://youtu.be/jMFaAc3sa04?si=BQUUGmAtCxV2ye47",
+                            Iscompleted = false,
                             Title = "Controllers and Views"
                         },
                         new
                         {
                             Id = 3,
                             CourseId = 2,
+                            FilePath = "https://youtu.be/SIQhe-yt3mA?si=R_G3denH8jmQMu_d",
+                            Iscompleted = false,
                             Title = "Getting Started with EF Core"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CourseId = 2,
+                            FilePath = "https://youtu.be/Mxm81T7waO8?si=BCU_ZxdJtD9IaM8A",
+                            Iscompleted = false,
+                            Title = "tmp2"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CourseId = 1,
+                            FilePath = "https://youtu.be/yxQ9CSwc_uk?si=KdLELQAnBlpOZRb4",
+                            Iscompleted = false,
+                            Title = "ff"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CourseId = 1,
+                            FilePath = "https://www.youtube.com/watch?v=SIQhe-yt3mA&t=1s",
+                            Iscompleted = false,
+                            Title = "nn"
                         });
                 });
 
@@ -414,16 +388,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4ac66",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5fdb15d0-39f9-43a5-8e3a-f099fe6cbe78",
+                            ConcurrencyStamp = "d1cf63c0-9914-4d38-9d9d-bd5277510287",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJZwkMluqf7uP56jQrtGK82SQM4muO+EDtgV5cyW92Aq1N7hgNN4CQuaDLvkQlE1mA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGye8LalHQn9IgA+d5nuj/pHhbVrn2oU2qOaIPBqCCrlSk8USmUSNkwbeC+nuaU8yw==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "288c5858-9fc1-456e-805d-8f208f3fbc58",
+                            SecurityStamp = "6ab528b0-b7f7-42b1-9270-de88b8cad8d6",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         },
@@ -431,16 +405,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4a001",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "54dffd41-3c8a-4525-b7c8-6efe1ab14915",
+                            ConcurrencyStamp = "4d6302fc-d3fb-4851-baa4-6020716802b9",
                             Email = "instructor1@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "INSTRUCTOR1@USER.COM",
                             NormalizedUserName = "INSTRUCTOR1",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKZ8TMuatY1987e43IfKUiXFAFMEHdyllGVmMVp4n5rLI5bNjk44mvjXM46EO+nJkg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJ+raZEBPmDgcWTwhLnA+u3bwTUJsKhNKQWx63fpbcuq/OtLKggXV8ISM50UNH1ylg==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "778145b0-5525-45f0-91e2-7047394c4aff",
+                            SecurityStamp = "5b6b0558-8a45-4797-a002-3e3a4e82eb17",
                             TwoFactorEnabled = false,
                             UserName = "instructor1"
                         },
@@ -448,16 +422,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4a002",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5613e7b4-b9a7-48a1-a417-1db9b9af6ad3",
+                            ConcurrencyStamp = "629c0b3a-f8b8-4943-b0d2-87d11afd4aba",
                             Email = "instructor2@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "INSTRUCTOR2@USER.COM",
                             NormalizedUserName = "INSTRUCTOR2",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBVBLRGtkS7tPtPD66vdDPXMMThm7hBNFa7kdmp0qv4XTrshDOvB8EVpQAdcOm1cIQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMXwYRuLMXj8o5RH8kcEn7DcHTTusK69yTTdWgX5miF+dVLveawszlLe+9dOhhqy2g==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "091f40c7-2023-43d7-9176-c7acb211b4ec",
+                            SecurityStamp = "d27e28ce-c3d7-4cda-a0cf-7ab278417544",
                             TwoFactorEnabled = false,
                             UserName = "instructor2"
                         },
@@ -465,16 +439,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4a111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "42e31caf-48ec-4fcd-ad2a-310a3ebf69de",
+                            ConcurrencyStamp = "8044503d-4aa4-4f0c-955a-d0aa84e20f4c",
                             Email = "student1@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "STUDENT1@USER.COM",
                             NormalizedUserName = "STUDENT1",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIQZTZad0K/EtsYffN4n7KpxBCuYQgBqrS526y/PFpsba8kq+k9WJZ+Ly3+woeGX4w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEGAOsKMGZ1id+VS9EoOL+uXvMUzUsO4VFBT6NX6rxKS+m2yVDsoS9btLIf3rhbBng==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "213db2d0-4d77-49a1-8d8b-259be3aa947a",
+                            SecurityStamp = "a2768082-3e9d-4abe-8586-089b9aa52432",
                             TwoFactorEnabled = false,
                             UserName = "student1"
                         },
@@ -482,16 +456,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4a112",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a68f0e11-442b-42ee-ac23-ca9965440f6e",
+                            ConcurrencyStamp = "c2f5baef-5e7d-48f1-a3e4-f8f07730617b",
                             Email = "student2@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "STUDENT2@USER.COM",
                             NormalizedUserName = "STUDENT2",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGQFsVuir4ljoGkR+dwpk+FvnUKHnQPLKFxZlZdGMnGeQktMlIMrPoZKc5zNtfYiFQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELV1h6fTD8djqV32OAMwsPo5o0vg55V7CVQYIaaje4k5MvmAbfFmEj5GAVsQeW47xA==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "928eedc9-4df1-4ba0-ad51-7d18af1564d4",
+                            SecurityStamp = "5c42baec-c4d2-45cb-b013-59eed7060f2c",
                             TwoFactorEnabled = false,
                             UserName = "student2"
                         });
@@ -559,6 +533,39 @@ namespace OnlineLearningPlatform.Migrations
                         });
                 });
 
+            modelBuilder.Entity("OnlineLearningPlatform.Models.Enrollment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CompletionStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EnrollmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Progress")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Enrollments");
+                });
+
             modelBuilder.Entity("Student", b =>
                 {
                     b.Property<int>("Id")
@@ -588,25 +595,6 @@ namespace OnlineLearningPlatform.Migrations
                             Id = 2,
                             AppUserId = "62fe5285-fd68-4711-ae93-673787f4a112"
                         });
-                });
-
-            modelBuilder.Entity("Enrollment", b =>
-                {
-                    b.HasOne("OnlineLearningPlatform.Models.Course", "Course")
-                        .WithMany("Enrollments")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Student", "Student")
-                        .WithMany("Enrollments")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -673,19 +661,8 @@ namespace OnlineLearningPlatform.Migrations
 
             modelBuilder.Entity("OnlineLearningPlatform.Entities.Models.Lesson", b =>
                 {
-                    b.HasOne("OnlineLearningPlatform.Entities.Models.Module", "Module")
-                        .WithMany("Lessons")
-                        .HasForeignKey("ModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Module");
-                });
-
-            modelBuilder.Entity("OnlineLearningPlatform.Entities.Models.Module", b =>
-                {
                     b.HasOne("OnlineLearningPlatform.Models.Course", "Course")
-                        .WithMany("Modules")
+                        .WithMany("Lessons")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -704,6 +681,25 @@ namespace OnlineLearningPlatform.Migrations
                     b.Navigation("Instructor");
                 });
 
+            modelBuilder.Entity("OnlineLearningPlatform.Models.Enrollment", b =>
+                {
+                    b.HasOne("OnlineLearningPlatform.Models.Course", "Course")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Student", "Student")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("Student", b =>
                 {
                     b.HasOne("OnlineLearningPlatform.Models.AppUser", "AppUser")
@@ -720,16 +716,11 @@ namespace OnlineLearningPlatform.Migrations
                     b.Navigation("TaughtCourses");
                 });
 
-            modelBuilder.Entity("OnlineLearningPlatform.Entities.Models.Module", b =>
-                {
-                    b.Navigation("Lessons");
-                });
-
             modelBuilder.Entity("OnlineLearningPlatform.Models.Course", b =>
                 {
                     b.Navigation("Enrollments");
 
-                    b.Navigation("Modules");
+                    b.Navigation("Lessons");
                 });
 
             modelBuilder.Entity("Student", b =>

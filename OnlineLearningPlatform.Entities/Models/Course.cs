@@ -22,7 +22,7 @@ namespace OnlineLearningPlatform.Models
         // Navigation properties
 
         public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
-        public List<Module>? Modules { get; set; }
+        public List<Lesson>? Lessons { get; set; }
 
 
 

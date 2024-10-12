@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnlineLearningPlatform.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -11,14 +12,17 @@ namespace OnlineLearningPlatform.Entities.Models
     {
         public int Id { get; set; }
 
-        [ForeignKey("Module")]
-        public int ModuleId { get; set; } // FK -> Module
+        [ForeignKey("Course")]
+        public int CourseId { get; set; } // FK -> Course
         public string Title { get; set; }
-        public string ContentFilePath { get; set; } 
-        public bool IsCompleted { get; set; } 
 
-        // nav prop
-        public Module Module { get; set; }
+        public string? FilePath { get; set; }
+
+        public bool Iscompleted { get; set; } = false;
+
+		// nav prop
+		public Course? Course { get; set; }
+        
     }
 
 }

@@ -6,7 +6,6 @@ using OnlineLearningPlatform.Helpers;
 using OnlineLearningPlatform.Migrations;
 using System.Reflection;
 using System.Reflection.Emit;
-using Module = OnlineLearningPlatform.Entities.Models.Module;
 
 namespace OnlineLearningPlatform.Models
 {
@@ -24,16 +23,15 @@ namespace OnlineLearningPlatform.Models
 
             //shadow prop for soft delete
             builder.Entity<Course>().Property<bool>("Deleted").IsRequired().HasDefaultValue(false);
-            builder.Entity<Module>().Property<bool>("Deleted").IsRequired().HasDefaultValue(false);
+            builder.Entity<Lesson>().Property<bool>("Deleted").IsRequired().HasDefaultValue(false);
            
 
             // global query filter -> delete course property
             builder.Entity<Course>().HasQueryFilter(c => !EF.Property<bool>(c, "Deleted"));
-            builder.Entity<Module>().HasQueryFilter(m => !EF.Property<bool>(m, "Deleted"));
+            builder.Entity<Lesson>().HasQueryFilter(m => !EF.Property<bool>(m, "Deleted"));
 
             //related tables
             builder.Entity<Enrollment>().HasQueryFilter(e => !EF.Property<bool>(e.Course, "Deleted"));
-            builder.Entity<Lesson>().HasQueryFilter(e => !EF.Property<bool>(e.Module, "Deleted"));
 
 
             // Configuring Enrollment with no cascade delete on Student and Course
@@ -213,18 +211,24 @@ namespace OnlineLearningPlatform.Models
             );
 
 
-            builder.Entity<Module>().HasData(
-                new Module { Id = 1, CourseId = 1, Title = "Introduction to ASP.NET Core" },
-                new Module { Id = 2, CourseId = 1, Title = "Controllers and Views" },
-                new Module { Id = 3, CourseId = 2, Title = "Getting Started with EF Core" }
-            );
+            
 
-        }
+			builder.Entity<Lesson>().HasData(
+			new Lesson { Id = 1, CourseId = 1, Title = "Introduction to ASP.NET Core", FilePath = "https://youtu.be/qBTe6uHJS_Y?si=bnOHK8WHLtxAP13Y", Iscompleted = false },
+			new Lesson { Id = 2, CourseId = 1, Title = "Controllers and Views", FilePath = "https://youtu.be/jMFaAc3sa04?si=BQUUGmAtCxV2ye47", Iscompleted = false },
+			new Lesson { Id = 3, CourseId = 2, Title = "Getting Started with EF Core", FilePath = "https://youtu.be/SIQhe-yt3mA?si=R_G3denH8jmQMu_d", Iscompleted = false },
+			new Lesson { Id = 4, CourseId = 2, Title = "tmp2", FilePath = "https://youtu.be/Mxm81T7waO8?si=BCU_ZxdJtD9IaM8A", Iscompleted = false },
+			new Lesson { Id = 5, CourseId = 1, Title = "ff", FilePath = "https://youtu.be/yxQ9CSwc_uk?si=KdLELQAnBlpOZRb4", Iscompleted = false },
+			new Lesson { Id = 6, CourseId = 1, Title = "nn", FilePath = "https://www.youtube.com/watch?v=SIQhe-yt3mA&t=1s", Iscompleted = false }
+		);
+
+
+		}
 
         public DbSet<Student> Students { get; set; }
         public DbSet<Instructor> Instructors { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
-        public DbSet<Module> Modules { get; set; }
+        public DbSet<Lesson> Lessons { get; set; }
     }
 }

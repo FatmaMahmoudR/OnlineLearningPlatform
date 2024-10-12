@@ -1,0 +1,79 @@
+﻿@model OnlineLearningPlatform.Entities.ViewModels.Account.UserProfileViewModel
+
+<div class="container">
+    <div class="main-body">
+        <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <img src="https://i.pinimg.com/564x/8a/dc/57/8adc57bcd3d3af88f34ff524fe7a136f.jpg" class="rounded-circle" width="150">
+                        <h4>@Model.Name</h4>
+                        <p class="text-secondary mb-1">@(Model.IsStudent ? "Student" : "Instructor")</p>
+                        @if (Model.IsStudent)
+                        {
+                            <a class="btn btn-link progress-link" href="/Account/MyProgress">My Progress</a>
+                        }
+                        else if (Model.IsInstructor)
+                        {
+                            <a class="btn btn-link myCourses-link" href="/Account/MyCourses">My Courses</a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <strong>Full Name: </strong> @Model.Name
+                        <hr>
+                        <strong>Email: </strong> @Model.Email
+                        <hr>
+                        <strong>Phone: </strong> @Model.PhoneNumber
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a class="btn btn-info" href="/Account/Edit">Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+
+
+    .main-body {
+        padding: 15px;
+    }
+
+    .card {
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .09);
+        background-color: #fff;
+        border-radius: .25rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .profile-photo {
+        width: 150px; /* Adjust size as needed */
+        height: 150px; /* Ensure it's a square */
+        border-radius: 50%; /* Circular image */
+        border: 2px solid #007bff; /* Blue border */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    }
+
+        .profile-photo:hover {
+            filter: brightness(1.1); /* Brighten image on hover */
+        }
+
+    .progress-link {
+        margin-top: 13px;
+        display: inline-block;
+    }
+</style>

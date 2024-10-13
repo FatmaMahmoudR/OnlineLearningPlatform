@@ -50,21 +50,26 @@ namespace OnlineLearningPlatform
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+                    app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "courseDetails",
                     pattern: "Course/Details/{id:int}",
                     defaults: new { controller = "Course", action = "Details" }
                 );
-                
+
+                // Add route for UserProfile
+                endpoints.MapControllerRoute(
+                    name: "userProfile",
+                    pattern: "UserProfile/UserProfile", // Adjust the pattern if needed
+                    defaults: new { controller = "UserProfile", action = "UserProfile" }
+                );
+
+                // Define the default route pattern
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
-
-            // Define the default route pattern
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
             app.Run();

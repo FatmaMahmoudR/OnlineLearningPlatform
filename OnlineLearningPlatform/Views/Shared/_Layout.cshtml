@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/OnlineLearningPlatform.styles.css" asp-append-version="true" />
     <!-- Add any additional CSS files here -->
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
 </head>
 <body>
@@ -44,8 +43,13 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Enrollment" asp-action="MyCourses"><i class="fas fa-solid fa-graduation-cap"></i> My Learning</a>
                             </li>
                         }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="UserProfile" asp-action="UserProfile"><i class="fas fa-user"></i> User Profile</a>
+                            </li>
 
-
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

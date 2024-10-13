@@ -1,0 +1,57 @@
+﻿@model OnlineLearningPlatform.Entities.ViewModels.UserProfile.UserProfileViewModel
+
+<div class="container main-body">
+    <div class="row gutters-sm">
+        <div class="col-md-4 mb-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <img src="https://i.pinimg.com/564x/8a/dc/57/8adc57bcd3d3af88f34ff524fe7a136f.jpg" class="profile-photo" alt="Profile Photo">
+                    <h4>@Model.Name</h4>
+                    <p class="text-secondary mb-1">@((Model.IsStudent) ? "Student" : "Instructor")</p>
+
+                    <a class="btn btn-link" href="@((Model.IsStudent) ? "/Account/MyProgress" : "/Account/MyCourses")">
+                        @((Model.IsStudent) ? "My Progress" : "My Courses")
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <strong>Full Name:</strong> @Model.Name
+                    <hr>
+                    <strong>Email:</strong> @Model.Email
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .main-body {
+        padding: 15px;
+    }
+
+    .card {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.09);
+        background-color: #fff;
+        border-radius: 0.25rem;
+    }
+
+    .profile-photo {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 2px solid #007bff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+        .profile-photo:hover {
+            filter: brightness(1.1);
+        }
+
+    .btn-link {
+        margin-top: 13px;
+    }
+</style>

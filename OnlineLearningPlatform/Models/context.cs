@@ -230,12 +230,12 @@ namespace OnlineLearningPlatform.Models
             
 
 			builder.Entity<Lesson>().HasData(
-			new Lesson { Id = 1, CourseId = 1, Title = "Introduction to ASP.NET Core", FilePath = "https://youtu.be/qBTe6uHJS_Y?si=bnOHK8WHLtxAP13Y", Iscompleted = false },
-			new Lesson { Id = 2, CourseId = 1, Title = "Controllers and Views", FilePath = "https://youtu.be/jMFaAc3sa04?si=BQUUGmAtCxV2ye47", Iscompleted = false },
-			new Lesson { Id = 3, CourseId = 2, Title = "Getting Started with EF Core", FilePath = "https://youtu.be/SIQhe-yt3mA?si=R_G3denH8jmQMu_d", Iscompleted = false },
-			new Lesson { Id = 4, CourseId = 2, Title = "tmp2", FilePath = "https://youtu.be/Mxm81T7waO8?si=BCU_ZxdJtD9IaM8A", Iscompleted = false },
-			new Lesson { Id = 5, CourseId = 1, Title = "ff", FilePath = "https://youtu.be/yxQ9CSwc_uk?si=KdLELQAnBlpOZRb4", Iscompleted = false },
-			new Lesson { Id = 6, CourseId = 1, Title = "nn", FilePath = "https://www.youtube.com/watch?v=SIQhe-yt3mA&t=1s", Iscompleted = false }
+			new Lesson { Id = 1, CourseId = 1, Title = "Introduction to ASP.NET Core", FilePath = "https://youtu.be/qBTe6uHJS_Y?si=bnOHK8WHLtxAP13Y"},
+			new Lesson { Id = 2, CourseId = 1, Title = "Controllers and Views", FilePath = "https://youtu.be/jMFaAc3sa04?si=BQUUGmAtCxV2ye47" },
+			new Lesson { Id = 3, CourseId = 2, Title = "Getting Started with EF Core", FilePath = "https://youtu.be/SIQhe-yt3mA?si=R_G3denH8jmQMu_d" },
+			new Lesson { Id = 4, CourseId = 2, Title = "tmp2", FilePath = "https://youtu.be/Mxm81T7waO8?si=BCU_ZxdJtD9IaM8A"},
+			new Lesson { Id = 5, CourseId = 1, Title = "ff", FilePath = "https://youtu.be/yxQ9CSwc_uk?si=KdLELQAnBlpOZRb4"},
+			new Lesson { Id = 6, CourseId = 1, Title = "nn", FilePath = "https://www.youtube.com/watch?v=SIQhe-yt3mA&t=1s" }
 		);
 
 
@@ -246,5 +246,7 @@ namespace OnlineLearningPlatform.Models
         public DbSet<Course> Courses { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
+        public DbSet<LessonCompletion> LessonCompletions { get; set; } 
+
     }
 }

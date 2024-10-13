@@ -122,6 +122,33 @@ namespace OnlineLearningPlatform.Controllers
                 }
                 await _context.SaveChangesAsync();
 
+                //****** Fill LessonCompletions Entity
+
+                // Fetch all lesson IDs
+                var lessonIds = await _context.Lessons
+                    .Where(l => l.CourseId == courseId) 
+                    .Select(l => l.Id) 
+                    .ToListAsync();
+
+                // Add LessonCompletions for each lesson
+                foreach (var lessonId in lessonIds)
+                {
+                    var lessonCompletion = new LessonCompletion
+                    {
+                        EnrollmentId = enrollment.Id, 
+                        LessonId = lessonId,
+                        IsCompleted = false 
+                    };
+
+                    _context.LessonCompletions.Add(lessonCompletion);
+                }
+
+               
+                await _context.SaveChangesAsync();
+
+                //******
+
+
                 ViewBag.Message = "You have successfully enrolled in the course.";
             }
             return View(await _context.Courses.FindAsync(courseId));

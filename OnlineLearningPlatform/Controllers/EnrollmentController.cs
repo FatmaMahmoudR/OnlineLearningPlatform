@@ -53,6 +53,7 @@ namespace OnlineLearningPlatform.App.Controllers
 				.Include(e => e.Course.Instructor.AppUser)
 				.Include(e => e.Student)
 					.ThenInclude(i => i.AppUser)
+                .Include(e=>e.LessonCompletions)
 				.FirstOrDefaultAsync(e => e.StudentId == std_id && e.CourseId == id && !EF.Property<bool>(e.Course, "Deleted"));
 
 			if (enrollment == null)
@@ -83,8 +84,9 @@ namespace OnlineLearningPlatform.App.Controllers
 				.Where(e => e.StudentId == std_id) 
 				.Include(e => e.Course) 
 				.Include(e => e.Course.Instructor) 
-			    .Include(e => e.Course.Instructor.AppUser) 
-				.ToListAsync();
+			    .Include(e => e.Course.Instructor.AppUser)
+                .Include(e => e.LessonCompletions)
+                .ToListAsync();
 
             if (enrollments == null)
             {
@@ -96,38 +98,62 @@ namespace OnlineLearningPlatform.App.Controllers
 
 
 
-		[HttpPost]
-		public async Task<IActionResult> MarkLessonCompleted(int enrollmentId, int lessonId)
-		{
-			// Validate input parameters
-			if (enrollmentId <= 0 || lessonId <= 0)
-			{
-				return BadRequest(new { success = false, message = "Invalid enrollment or lesson ID." });
-			}
+        [HttpPost("Enrollment/MarkLessonCompleted/{enrollmentId}/{lessonId}")]
+        public async Task<IActionResult> MarkLessonCompleted(int enrollmentId, int lessonId)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
 
-			
-			var enrollment = await _context.Enrollments
-										   .Include(e => e.Course)
-										   .ThenInclude(c => c.Lessons)
-										   .FirstOrDefaultAsync(e => e.Id == enrollmentId);
+            var student = await _context.Students
+                .Include(s => s.Enrollments)
+                .FirstOrDefaultAsync(s => s.AppUserId == currentUser.Id);
 
-			if (enrollment != null)
-			{
-				
-				var lesson = enrollment.Course.Lessons.FirstOrDefault(l => l.Id == lessonId);
+            if (enrollmentId <= 0 || lessonId <= 0)
+            {
+                return BadRequest(new { success = false, message = "Invalid enrollment or lesson ID." });
+            }
 
-				if (lesson != null)
-				{
-					lesson.Iscompleted = true;
-					await _context.SaveChangesAsync(); 
-					return Ok(new { success = true });
-				}
-			}
+            
+            var enrollment = await _context.Enrollments
+                .Include(e => e.Course)
+                .ThenInclude(c => c.Lessons)
+                .Include(e => e.LessonCompletions) 
+                .FirstOrDefaultAsync(e => e.Id == enrollmentId && e.StudentId == student.Id);
 
-			return BadRequest(new { success = false, message = "Enrollment or lesson not found." });
-		}
-	
-	
+            if (enrollment != null)
+            {
+                var lesson = enrollment.Course.Lessons.FirstOrDefault(l => l.Id == lessonId);
+
+                if (lesson != null)
+                {
+                    var lessonCompletion = enrollment.LessonCompletions
+                        .FirstOrDefault(lc => lc.LessonId == lessonId);
+
+                    if (lessonCompletion == null)
+                    {
+                        lessonCompletion = new LessonCompletion
+                        {
+                            EnrollmentId = enrollmentId,
+                            LessonId = lessonId,
+                            IsCompleted = true
+                        };
+                        enrollment.LessonCompletions.Add(lessonCompletion); 
+                    }
+                    else
+                    {
+                        lessonCompletion.IsCompleted = true;
+                    }
+
+                    await _context.SaveChangesAsync();
+                    return Ok(new { success = true });
+                }
+                else
+                {
+                    return BadRequest(new { success = false, message = "Lesson not found in this enrollment." });
+                }
+            }
+
+            return BadRequest(new { success = false, message = "Enrollment not found." });
+        }
 
 
 
@@ -138,7 +164,8 @@ namespace OnlineLearningPlatform.App.Controllers
 
 
 
-	}
+
+    }
 
 
 }

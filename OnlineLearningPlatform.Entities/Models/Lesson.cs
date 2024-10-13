@@ -18,8 +18,6 @@ namespace OnlineLearningPlatform.Entities.Models
 
         public string? FilePath { get; set; }
 
-        public bool Iscompleted { get; set; } = false;
-
 		// nav prop
 		public Course? Course { get; set; }
         

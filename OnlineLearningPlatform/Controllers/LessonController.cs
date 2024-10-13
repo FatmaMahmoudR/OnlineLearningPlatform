@@ -139,7 +139,7 @@ namespace OnlineLearningPlatform.App.Controllers
             {
                 try
                 {
-                    // Include the Course when loading the Lesson
+
                     var currLesson = await _context.Lessons
                         .Include(l => l.Course)
                         .FirstOrDefaultAsync(l => l.Id == id);
@@ -160,10 +160,8 @@ namespace OnlineLearningPlatform.App.Controllers
                         return Forbid();
                     }
 
-                    // Update the lesson's properties
                     currLesson.Title = lesson.Title;
                     currLesson.FilePath = lesson.FilePath;
-                    currLesson.Iscompleted = lesson.Iscompleted;
 
                     await _context.SaveChangesAsync();
                 }
@@ -179,7 +177,6 @@ namespace OnlineLearningPlatform.App.Controllers
                     }
                 }
 
-                // Redirect to the course details page
                 return RedirectToAction("Details", "Course", new { id = lesson.CourseId });
             }
 
@@ -213,7 +210,7 @@ namespace OnlineLearningPlatform.App.Controllers
             var lesson = await _context.Lessons.FindAsync(id);
             if (lesson != null)
             {
-                // Soft delete using shadow property
+
                 _context.Entry(lesson).Property("Deleted").CurrentValue = true;
                 await _context.SaveChangesAsync();
             }

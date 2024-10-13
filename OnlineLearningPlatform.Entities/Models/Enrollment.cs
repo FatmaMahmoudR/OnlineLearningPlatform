@@ -1,4 +1,5 @@
-﻿using OnlineLearningPlatform.Helpers;
+﻿using OnlineLearningPlatform.Entities.Models;
+using OnlineLearningPlatform.Helpers;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineLearningPlatform.Models
@@ -19,5 +20,7 @@ namespace OnlineLearningPlatform.Models
         public DateTime EnrollmentDate { get; set; }
         public CompletionStatus CompletionStatus { get; set; }
         public int Progress { get; set; }  // 0-100 percentage
+        public ICollection<LessonCompletion> LessonCompletions { get; set; } // Track individual lesson completions
+
     }
 }

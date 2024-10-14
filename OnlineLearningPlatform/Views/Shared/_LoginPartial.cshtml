@@ -6,9 +6,6 @@
     @if (_signInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <h5>Hello, @User.Identity.Name &nbsp;</h5>
-        </li>
-        <li class="nav-item">
             <form asp-action="Logout" method="post" asp-controller="Account">
             <button type="submit" class="btn btn-danger">Logout</button>
             </form>

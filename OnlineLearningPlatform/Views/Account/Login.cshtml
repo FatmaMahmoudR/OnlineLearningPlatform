@@ -5,36 +5,167 @@
     Layout = "_AccountLayout";
 }
 
-<h1>Login</h1>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Login">
-            <h2>Sign in to your account</h2>
-            <input type="hidden" name="ReturnUrl" value="@ViewData["ReturnUrl"]" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating mb-3">                
-                <input asp-for="UserName" class="form-control" placeholder="User name" autocomplete="off"/>
-                <label asp-for="UserName" class="control-label"></label>
-                <span asp-validation-for="UserName" class="text-danger"></span>
+<section class="vh-100" style="background-color: #f7f9fc;">
+    <div class="container py-5 h-100">
+        <div class="row d-flex align-items-center justify-content-center h-100">
+            <div class="col-md-8 col-lg-7 col-xl-6 text-center">
+                <img src="https://i.pinimg.com/originals/f2/6e/b4/f26eb4efb0f499e859788f7eb822ca98.gif"
+                     class="img-fluid" alt="Login illustration" style="max-width: 80%; height: auto; background-color: transparent;"> <!-- Background set to transparent -->
             </div>
-            <div class="form-floating mb-3">              
-                <input asp-for="Password" class="form-control" placeholder="Password" autocomplete="off"/>
-                <label asp-for="Password" class="control-label"></label>
-                <span asp-validation-for="Password" class="text-danger"></span>
+            <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+                <div class="card shadow" style="border-radius: 1rem; background-color: transparent;">
+                    <!-- Set card background to transparent -->
+                    <div class="card-body p-5">
+                        <h2 class="mb-4">Welcome Back!</h2>
+                        <form asp-action="Login" id="loginForm">
+                            <input type="hidden" name="ReturnUrl" value="@ViewData["ReturnUrl"]" />
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <!-- Email input -->
+                            <div data-mdb-input-init class="form-outline mb-4">
+                                <label class="form-label" for="form1Example13">Email address</label>
+                                <input asp-for="UserName" id="form1Example13" class="form-control form-control-lg" placeholder="Enter your email" autocomplete="off" />
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                            </div>
+
+                            <!-- Password input -->
+                            <div data-mdb-input-init class="form-outline mb-4">
+                                <label class="form-label" for="form1Example23">Password</label>
+                                <input asp-for="Password" id="form1Example23" class="form-control form-control-lg" placeholder="Enter your password" autocomplete="off" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <!-- Checkbox -->
+                                <div class="form-check">
+                                    <input class="form-check-input" asp-for="RememberMe" id="form1Example3" />
+                                    <label class="form-check-label" for="form1Example3"> Remember me </label>
+                                </div>
+                                <a href="#!" class="text-muted">Forgot password?</a>
+                            </div>
+
+                            <div class="wrapper">
+                                <button type="submit" id="submitButton" style="width: 120px;">
+                                    <span>Submit</span>
+                                    <div class="success">
+                                        <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
+                                        <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173 c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752 c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+                                        </svg>
+                                    </div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="form-group form-check mb-3">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</section>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+
+<style>
+    .wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    button {
+        font-family: 'Ubuntu', sans-serif;
+        position: relative;
+        width: 100%; /* Keep this for button scaling */
+        max-width: 120px; /* Set max width for the button */
+        height: 40px;
+        line-height: 1;
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        border: 1px solid #8C82FC;
+        background: #fff;
+        color: #8C82FC;
+        border-radius: 40px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: all .35s;
+    }
+
+        button:hover {
+            background: #8C82FC;
+            color: #fff;
+        }
+
+        button span {
+            opacity: 1;
+            visibility: visible;
+            transition: all .35s;
+        }
+
+    .success {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        border-radius: 50%;
+        z-index: 1;
+        opacity: 0;
+        visibility: hidden;
+        transition: all .35s;
+    }
+
+        .success svg {
+            width: 20px;
+            height: 20px;
+            fill: yellowgreen;
+            transform-origin: 50% 50%;
+            transform: translateY(-50%) rotate(0deg) scale(0);
+            transition: all .35s;
+        }
+
+    button.is_active {
+        width: 40px;
+        height: 40px;
+    }
+
+        button.is_active .success {
+            opacity: 1;
+            visibility: visible;
+        }
+
+            button.is_active .success svg {
+                margin-top: 50%;
+                transform: translateY(-50%) rotate(720deg) scale(1);
+            }
+
+        button.is_active span {
+            opacity: 0;
+            visibility: hidden;
+        }
+</style>
+
+<script>
+    const btn = document.querySelector("button");
+    const form = document.getElementById('loginForm');
+
+    btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        active();
+
+        // Simulate form submission
+        setTimeout(() => {
+            // Reset the button animation after submission
+            btn.classList.remove('is_active');
+            form.submit();
+        }, 1500); // Duration of animation
+    });
+
+    function active() {
+        btn.classList.toggle("is_active");
+    }
+</script>

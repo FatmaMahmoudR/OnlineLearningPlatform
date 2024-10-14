@@ -1,6 +1,6 @@
 ﻿@model OnlineLearningPlatform.Models.Enrollment
 @using OnlineLearningPlatform.Entities.Models
-@using OnlineLearningPlatform.Models;
+@using OnlineLearningPlatform.Models; 
 
 @{
     ViewData["Title"] = "Details";
@@ -32,25 +32,25 @@
                     <h1 class="hero-heading mb-5">
                         <span class="brand mb-4 d-block">
                             <span class="text-highlight pr-2">{ </span>
-                            <span class="name">@Model?.Course?.Category ?? "Category Not Available"</span>
+                            <span class="name">@Model?.Course?.Category</span>
                             <span class="text-highlight pl-2"> }</span>
                         </span>
-                        <span class="desc d-block">@Model?.Course?.Name ?? "Course Name Not Available"</span>
+                        <span class="desc d-block">@Model.Course.Name</span>
                     </h1>
 
                     <div class="hero-summary">
                         <div class="row">
                             <div class="item col-4">
                                 <div class="summary-desc mb-1"><i class="icon fas fa-video me-2"></i>Content</div>
-                                <h4 class="summary-heading">@Model?.Course?.Lessons?.Count ?? 0 <span class="desc">Videos</span></h4>
+                                <h4 class="summary-heading"> @Model.Course.Lessons.Count+ <span class="desc">Videos</span></h4>
                             </div>
                             <div class="item col-4">
                                 <div class="summary-desc mb-1"><i class="fas fa-bolt me-2"></i>Level</div>
-                                <h4 class="summary-heading">@Model?.Course?.DifficultyLevel ?? "Level Not Available"</h4>
+                                <h4 class="summary-heading">@Model.Course?.DifficultyLevel</h4>
                             </div>
                             <div class="item col-4">
                                 <div class="summary-desc mb-1"><i class="icon fas fa-user-circle me-2"></i>Instructor</div>
-                                <h4 class="summary-heading">@Model?.Course?.Instructor?.AppUser?.UserName ?? "Instructor Not Available"</h4>
+                                <h4 class="summary-heading">@Model.Course?.Instructor?.AppUser?.UserName</h4>
                             </div>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                 <div class="container py-5">
                     <div class="section-col-max mx-auto">
                         <h3 class="section-title text-center mb-4">What Will You Learn</h3>
-                        <p class="mb-4">@Model?.Course?.Description ?? "Description Not Available"</p>
+                        <p class="mb-4">@Model.Course?.Description</p>
                     </div>
                 </div>
             </div>
@@ -81,8 +81,11 @@
                                         @{
                                             int i = 1;
                                             var completedLessons = Model.LessonCompletions.ToList();
+
+                                            
+
                                         }
-                                        @foreach (var lesson in Model?.Course?.Lessons ?? Enumerable.Empty<Lesson>())
+                                        @foreach (var lesson in Model.Course?.Lessons)
                                         {
                                             <div class="module-sub-item p-3">
                                                 <div class="row justify-content-between">
@@ -90,10 +93,11 @@
                                                         <span class="theme-text-secondary me-2">@i</span>
                                                         @{
                                                             i++;
-                                                            var lesson_enroll = Model.LessonCompletions.FirstOrDefault(l => l.LessonId == lesson.Id);
+                                                           var lesson_enroll= Model.LessonCompletions.FirstOrDefault(l => l.LessonId == lesson.Id);
                                                         }
                                                         <a class="video-play-trigger" href="#" data-bs-toggle="modal" data-bs-target="#modal-video-@lesson.Id">
-                                                            @if (lesson_enroll?.IsCompleted == true)
+                                                            
+                                                            @if (lesson_enroll.IsCompleted)
                                                             {
                                                                 <i class="fas fa-circle-check fa-solid" style="color: #1cb048;"></i>
                                                             }
@@ -147,7 +151,10 @@
         </div>
     </div>
 
+
     <script src="https://www.youtube.com/iframe_api"></script>
+
+
 
     <script>
        
@@ -155,35 +162,40 @@
 
 
         let players = {};
+
+        // Function to initialize or update video players when the modal is shown
         function initializePlayer(lessonId, iframeId) {
             if (!players[lessonId]) {
                 players[lessonId] = new YT.Player(iframeId);
             }
         }
 
+        // Event listener for showing the modal to reinitialize the player
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('shown.bs.modal', function (event) {
                 const iframe = modal.querySelector('iframe');
                 const lessonId = iframe.getAttribute('data-lesson-id');
                 const iframeId = iframe.id;
-                initializePlayer(lessonId, iframeId);
+                initializePlayer(lessonId, iframeId);  
             });
         });
 
+        // Function to stop video playback
         function stopVideo(lessonId) {
             if (players[lessonId]) {
-                players[lessonId].stopVideo();
+                players[lessonId].stopVideo(); 
             }
         }
 
+        // Event listener for when modals are closed, to stop video automatically
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('hidden.bs.modal', function (event) {
                 const lessonId = modal.querySelector('iframe').getAttribute('data-lesson-id');
                 stopVideo(lessonId);
                 const iframe = modal.querySelector('iframe');
                 const src = iframe.getAttribute('src');
-                iframe.setAttribute('src', '');
-                iframe.setAttribute('src', src);
+                iframe.setAttribute('src', '');  
+                iframe.setAttribute('src', src); 
             });
         });
 
@@ -222,7 +234,7 @@
         function onYouTubeIframeAPIReady() {
             document.querySelectorAll('iframe').forEach((iframe) => {
                 const lessonId = iframe.getAttribute('data-lesson-id');
-                initializePlayer(lessonId, iframe.id);
+                initializePlayer(lessonId, iframe.id); 
             });
         }
 
@@ -234,4 +246,12 @@
 
 
     </script>
+
+  
+
+
 </body>
+
+
+
+

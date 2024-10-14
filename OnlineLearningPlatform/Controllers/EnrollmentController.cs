@@ -1,9 +1,9 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Entities.Models;
+using OnlineLearningPlatform.Helpers;
 using OnlineLearningPlatform.Models;
 using System.Net;
 using System.Security.Claims;
@@ -65,7 +65,7 @@ namespace OnlineLearningPlatform.App.Controllers
 		}
 
 
-        public async Task<IActionResult> MyCourses()
+        public async Task<IActionResult> MyLearning()
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
@@ -144,6 +144,13 @@ namespace OnlineLearningPlatform.App.Controllers
                     }
 
                     await _context.SaveChangesAsync();
+
+                    // update progress 
+                    UpdateProgressAfterLessonCompletion(enrollmentId);
+
+                    // change enrollment completion status
+                    changeCompletionStatus(enrollmentId);
+
                     return Ok(new { success = true });
                 }
                 else
@@ -156,6 +163,64 @@ namespace OnlineLearningPlatform.App.Controllers
         }
 
 
+
+        public void UpdateProgressAfterLessonCompletion(int enrollmentId)
+        {
+            var enrollment = _context.Enrollments
+                .Include(e => e.Course)
+                .ThenInclude(c => c.Lessons)
+                .Include(e => e.LessonCompletions)
+                .FirstOrDefault(e => e.Id == enrollmentId);
+
+            if (enrollment == null)
+            {
+                throw new Exception("Enrollment not found.");
+            }
+
+            int totalLessons = enrollment.Course.Lessons.Count;
+
+            int completedLessons = enrollment.LessonCompletions
+                .Count(lc => lc.IsCompleted);
+
+            double progress = ((double)completedLessons / totalLessons) * 100;
+
+            
+            enrollment.Progress = (int)progress;
+            _context.SaveChanges();
+        }
+
+        public void changeCompletionStatus(int enrollmentId)
+        {
+            var enrollment = _context.Enrollments
+                .Include(e => e.Course)
+                .ThenInclude(c => c.Lessons)
+                .Include(e => e.LessonCompletions)
+                .FirstOrDefault(e => e.Id == enrollmentId);
+
+            if (enrollment == null)
+            {
+                throw new Exception("Enrollment not found.");
+            }
+            if(enrollment.CompletionStatus == CompletionStatus.NotStarted)
+            {
+                enrollment.CompletionStatus = CompletionStatus.InProgress;
+                _context.SaveChanges();
+
+            }
+
+            int totalLessons = enrollment.Course.Lessons.Count;
+
+            int completedLessons = enrollment.LessonCompletions
+                .Count(lc => lc.IsCompleted);
+
+            if(completedLessons == totalLessons)
+            {
+                enrollment.CompletionStatus = CompletionStatus.Completed;
+                _context.SaveChanges();
+            }
+
+
+        }
 
 
 

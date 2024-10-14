@@ -7,16 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\CrsLanding\assets\plugins\.DS_Store" />
-    <None Include="wwwroot\CrsLanding\assets\plugins\bootstrap\.DS_Store" />
-    <None Include="wwwroot\CrsLanding\assets\plugins\gumshoe\.DS_Store" />
-    <None Include="wwwroot\CrsLanding\assets\plugins\gumshoe\.github\contributing.md" />
-    <None Include="wwwroot\CrsLanding\assets\plugins\gumshoe\.github\issue_template.md" />
-    <None Include="wwwroot\CrsLanding\assets\plugins\gumshoe\.github\main.workflow" />
-    <None Include="wwwroot\CrsLanding\assets\scss\bootstrap\.DS_Store" />
-    <None Include="wwwroot\CrsLanding\assets\scss\bootstrap\scss\.DS_Store" />
-    <None Include="wwwroot\CrsLanding\assets\scss\bootstrap\scss\tests\.DS_Store" />
-    <None Include="wwwroot\CrsLanding\assets\scss\theme\.DS_Store" />
+    <Compile Remove="wwwroot\CrsLanding\assets\scss\**" />
+    <Content Remove="wwwroot\CrsLanding\assets\scss\**" />
+    <EmbeddedResource Remove="wwwroot\CrsLanding\assets\scss\**" />
+    <None Remove="wwwroot\CrsLanding\assets\scss\**" />
   </ItemGroup>
 
   <ItemGroup>

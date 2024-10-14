@@ -108,7 +108,7 @@ namespace OnlineLearningPlatform.Controllers
                     CourseId = courseId,
                     StudentId = studentId,
                     EnrollmentDate = DateTime.Now,
-                    CompletionStatus = CompletionStatus.InProgress,
+                    CompletionStatus = CompletionStatus.NotStarted,
                     Progress = 0,
                 };
 

@@ -1,29 +1,10 @@
 ﻿@model OnlineLearningPlatform.Models.Enrollment
 @using OnlineLearningPlatform.Entities.Models
-@using OnlineLearningPlatform.Models; // Ensure you include your models namespace
+@using OnlineLearningPlatform.Models; 
 
 @{
     ViewData["Title"] = "Details";
 }
-
-<head>
-    <title>My Courses</title>
-    <!-- Meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">
-    <link rel="shortcut icon" href="@Url.Content("~/CrsLanding/assets/favicon.ico")">
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:800|Roboto:400,500,700&display=swap" rel="stylesheet">
-
-    <!-- FontAwesome JS-->
-    <script defer src="@Url.Content("~/CrsLanding/assets/fontawesome/js/all.min.js")"></script>
-
-    <!-- Theme CSS -->
-    <link id="theme-style" rel="stylesheet" href="@Url.Content("~/CrsLanding/assets/css/theme.css")">
-</head>
 
 @{
     string ExtractYouTubeVideoId(string url)
@@ -61,7 +42,7 @@
                         <div class="row">
                             <div class="item col-4">
                                 <div class="summary-desc mb-1"><i class="icon fas fa-video me-2"></i>Content</div>
-                                <h4 class="summary-heading">80+ <span class="desc">Videos</span></h4>
+                                <h4 class="summary-heading"> @Model.Course.Lessons.Count+ <span class="desc">Videos</span></h4>
                             </div>
                             <div class="item col-4">
                                 <div class="summary-desc mb-1"><i class="fas fa-bolt me-2"></i>Level</div>
@@ -170,10 +151,6 @@
         </div>
     </div>
 
-
-    <script src="@Url.Content("~/CrsLanding/assets/plugins/popper.min.js")"></script>
-    <script src="@Url.Content("~/CrsLanding/assets/plugins/bootstrap/js/bootstrap.min.js")"></script>
-    <script src="@Url.Content("~/CrsLanding/assets/js/main.js")"></script>
 
     <script src="https://www.youtube.com/iframe_api"></script>
 

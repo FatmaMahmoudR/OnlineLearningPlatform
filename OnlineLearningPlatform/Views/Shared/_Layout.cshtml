@@ -3,12 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - OnlineLearningPlatform</title>
+    <title>@ViewData["Title"] - Online Learning Platform</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/OnlineLearningPlatform.styles.css" asp-append-version="true" />
     <!-- Add any additional CSS files here -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <script defer src="@Url.Content("~/CrsLanding/assets/fontawesome/js/all.min.js")"></script>
+
 </head>
 <body>
     <header>
@@ -40,7 +42,7 @@
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
                         {
                             <li>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Enrollment" asp-action="MyCourses"><i class="fas fa-solid fa-graduation-cap"></i> My Learning</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Enrollment" asp-action="MyLearning"><i class="fas fa-solid fa-graduation-cap"></i> My Learning</a>
                             </li>
                         }
                         @if (User.Identity.IsAuthenticated)

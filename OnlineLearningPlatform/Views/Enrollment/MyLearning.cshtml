@@ -1,0 +1,122 @@
+﻿@using OnlineLearningPlatform.Helpers
+@model IEnumerable<OnlineLearningPlatform.Models.Enrollment>
+
+@{
+    ViewData["Title"] = "MyCourses";
+}
+
+
+<body>
+    <link id="theme-style" rel="stylesheet" href="@Url.Content("~/MyLearning/css/style.css")">
+
+    <div class="main-content">
+        <div class="container mt-7">
+            <!-- Table -->
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-header border-0">
+                        <h3 class="mb-0">My Learning</h3>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Course</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Completion</th>
+                                    <th> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <th scope="row">
+                                            <div class="media align-items-center">
+                                                <a href="#" class="avatar rounded-circle mr-3">
+                                                    <img alt="Image placeholder" src="https://raw.githack.com/creativetimofficial/argon-dashboard/master/assets/img/theme/bootstrap.jpg">
+                                                </a>
+                                                <div class="media-body">
+                                                    <span class="mb-0 text-sm">@item.Course.Name</span>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <td>
+                                            @item.Course.Category
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-dot mr-4">
+                                                @if (@item.CompletionStatus == CompletionStatus.NotStarted)
+                                                {
+                                                    <i class="bg-danger"></i>
+
+                                                }
+                                                else if (@item.CompletionStatus == CompletionStatus.InProgress)
+                                                {
+                                                    <i class="bg-warning"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="bg-success"></i>
+                                                }
+                                            </span>
+                                            @item.CompletionStatus
+                                        </td>
+
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="mr-2">@item.Progress%</span>
+                                                <div>
+                                                    <div class="progress">
+                                                        @{
+                                                            if (item.Progress == 100)
+                                                            {
+                                                                <div class="progress-bar bg-success" role="progressbar" aria-valuenow="@item.Progress" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress%;"></div>
+
+                                                            }
+                                                            else if (item.Progress < 25)
+                                                            {
+                                                                <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="@item.Progress" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress%;"></div>
+
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="@item.Progress" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress%;"></div>
+
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <a asp-controller="Enrollment" asp-action="Details" asp-route-id="@item.CourseId" class="btn btn-primary"> GO </a>
+
+                                        </td>
+                                    </tr>
+
+                                }
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="card-footer py-4">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+</body>
+ 
+
+

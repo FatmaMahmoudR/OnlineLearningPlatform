@@ -108,7 +108,7 @@
                                                             @lesson.Title
                                                         </a>
                                                     </div>
-                                                    <div class="col-3 text-end extra-info">02:30</div>
+                                                   
                                                 </div>
                                             </div>
 
@@ -157,30 +157,7 @@
 
 
     <script>
-        ////////////// Mark Lesson as Completed //////////////
-
-        function completeLesson(enrollmentId, lessonId) {
-            fetch(`/Enrollment/MarkLessonCompleted/${enrollmentId}/${lessonId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => {
-                if (response.ok) {
-                    alert("Lesson marked as complete!");
-                   
-                    const button = document.querySelector(`#completeLessonButton_${lessonId}`);
-                    button.innerText = "Lesson Completed";
-                    button.disabled = true;
-                } else {
-                    alert("Error marking lesson as complete");
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert("An error occurred while marking the lesson as complete.");
-            });
-        }
-
+       
         ////////////// Close Button //////////////
 
 
@@ -222,7 +199,10 @@
             });
         });
 
-        // Mark Lesson as Completed
+
+
+        /////////////////  Mark Lesson as Completed ///////////////////////
+
         function completeLesson(enrollmentId, lessonId) {
             fetch(`/Enrollment/MarkLessonCompleted/${enrollmentId}/${lessonId}`, {
                 method: 'POST',
@@ -259,7 +239,7 @@
         }
 
 
-        ///////////// Actual Video ////////////////
+        ///////////// Actual Video duration////////////////
 
 
 

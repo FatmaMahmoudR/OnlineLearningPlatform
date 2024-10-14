@@ -4,43 +4,95 @@
     ViewData["Title"] = "Create Lesson"; 
 }
 
-<h1>Create Lesson</h1>
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <input type="hidden" asp-for="CourseId" value="@ViewBag.CourseId" />
-
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+<div class="container py-5">
+        <!-- title-->
+        <div class="row mb-4">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-6"> Create Lesson </h1>
             </div>
+        </div> 
+        <!-- End -->
 
-            <div class="form-group">
-                <label asp-for="FilePath" class="control-label"></label>
-                <input asp-for="FilePath" class="form-control" />
-                <span asp-validation-for="FilePath" class="text-danger"></span>
+        <div class="row">
+            <div class="col-lg-6 mx-auto ">
+            <div class="card shadow-lg rounded">
+                    <div class="card-header">
+
+                    <div class="tab-content ">
+
+                        <div id="credit-card" class="tab-pane fade show active  p-5">
+                                <form role="form" asp-action="Create">
+
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                                <input type="hidden" asp-for="CourseId" value="@ViewBag.CourseId" />
+
+                                <div class="form-group">
+                                    <label asp-for="Title" class="control-label">
+                                        <h6>Title</h6>
+                                    </label>
+                                    <input asp-for="Title" class="form-control" />
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label asp-for="FilePath" class="control-label">
+                                        <h6>Youtube Link </h6>
+                                    </label>
+                                    <input asp-for="FilePath" class="form-control" />
+                                    <span asp-validation-for="FilePath" class="text-danger"></span>
+                                </div>
+
+                                <div class=" row pt-3 justify-content-center">
+                                    <div class="col-10 col-md-4 ">
+                                        <button type="submit" class="subscribe btn btn-primary btn-block shadow-sm  form-control ">Create</button>
+                                    </div>
+                                    <div class="col-8 col-md-4">
+                                        <a asp-controller="Course" asp-action="Details" asp-route-id="@ViewBag.CourseId" class="subscribe btn btn-primary btn-block shadow-sm  form-control"> Back</a>
+                                    </div>
+                                </div>
+
+
+                            </form>
+                            </div>
+                        </div> <!-- End -->
+                        
+                    </div>
+                </div>
             </div>
-
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        </div>
 </div>
 
-<div>
-    <a asp-controller="Course" asp-action="Details" asp-route-id="@ViewBag.CourseId">Back to List</a>
+    <style>
 
-</div>
+        .rounded {
+            border-radius: 15rem
+        }
+
+        .nav-pills .nav-link {
+            color: #555
+        }
+
+            .nav-pills .nav-link.active {
+                color: white
+            }
+
+        input[type="radio"] {
+            margin-right: 5px
+        }
+
+        .bold {
+            font-weight: bold
+        }
+    </style>
+
+    
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
+

@@ -6,216 +6,207 @@
 
 
 }
-
-<head>
-	<title>My Courses </title>
-
-	<!-- Meta -->
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="author" content="Xiaoying Riley at 3rd Wave Media">
-	<link rel="shortcut icon" href="@Url.Content("~/CrsLanding/assets/favicon.ico")">
-
-	<!-- Google Font -->
-	<!-- FontAwesome JS-->
-	<script defer src="@Url.Content("~/CrsLanding/assets/fontawesome/js/all.min.js")"></script>
-
-	<!-- Theme CSS -->
-	<link id="theme-style" rel="stylesheet" href="@Url.Content("~/CrsLanding/assets/css/theme.css")">
-
-</head>
-
 @{
-
-	string ExtractYouTubeVideoId(string url)
-	{
-		if (url.Contains("youtu.be/"))
-		{
-			// youtu.be/ID
-			var index = url.IndexOf("youtu.be/") + 9;
-			return url.Substring(index, 11);
-		}
-		else if (url.Contains("v="))
-		{
-			// youtube.com/watch?v=ID
-			var index = url.IndexOf("v=") + 2;
-			return url.Substring(index, 11);
-		}
-		return string.Empty;
-	}
+    string ExtractYouTubeVideoId(string url)
+    {
+        if (url.Contains("youtu.be/"))
+        {
+            var index = url.IndexOf("youtu.be/") + 9;
+            return url.Substring(index, 11);
+        }
+        else if (url.Contains("v="))
+        {
+            var index = url.IndexOf("v=") + 2;
+            return url.Substring(index, 11);
+        }
+        return string.Empty;
+    }
 }
 
-
 <body>
+    <header class="header">
+        <section class="hero-section" style="background:url('@Url.Content("~/CrsLanding/assets/images/bg.png")')">
+            <div class="hero-mask"></div>
+            <div class="container text-center py-5">
+                <div class="single-col-max mx-auto">
+                    <h1 class="hero-heading mb-5">
+                        <span class="brand mb-4 d-block">
+                            <span class="text-highlight pr-2">{ </span>
+                            <span class="name">@Model?.Category</span>
+                            <span class="text-highlight pl-2"> }</span>
+                        </span>
+                        <span class="desc d-block">@Model?.Name</span>
+                    </h1>
 
-	<header class="header">
-		<section class="hero-section" style="background:url('@Url.Content("~/CrsLanding/assets/images/bg.png")')">
+                    <div class="hero-summary">
+                        <div class="row">
+                            <div class="item col-4">
+                                <div class="summary-desc mb-1"><i class="icon fas fa-video me-2"></i>Content</div>
+                                <h4 class="summary-heading"> @Model.Lessons.Count+ <span class="desc">Videos</span></h4>
+                            </div>
+                            <div class="item col-4">
+                                <div class="summary-desc mb-1"><i class="fas fa-bolt me-2"></i>Level</div>
+                                <h4 class="summary-heading">@Model?.DifficultyLevel</h4>
+                            </div>
+                            <div class="item col-4">
+                                <div class="summary-desc mb-1"><i class="icon fas fa-user-circle me-2"></i>Instructor</div>
+                                <h4 class="summary-heading">@Model?.Instructor?.AppUser?.UserName</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </header>
 
-			<div class="hero-mask">
-			</div><!--//hero-mask-->
-			<div class="container text-center py-5">
-				<div class="single-col-max mx-auto">
-					
-					<h1 class="hero-heading mb-5">
-						<span class="brand mb-4 d-block"><span class="text-highlight pr-2">{ </span><span class="name">@Model.Category</span><span class="text-highlight pl-2"> }</span></span>
-						<span class="desc d-block"> @Model.Name</span>
-					</h1>
-					<!-- if not enrolled -->
-					<!-- <div class="text-center mb-5">
-						<a href="#section-pricing" class="btn btn-primary btn-lg scrollto">Start Learning Now</a>
-					</div> -->
-
-					<div class="hero-summary">
-						<div class="row">
-							<div class="item col-4">
-								<div class="summary-desc mb-1"><i class="icon fas fa-video me-2"></i>Content</div>
-								<h4 class="summary-heading"> @Model.Lessons.Count <span class="desc">Videos</span></h4>
-
-							</div><!--//col-->
-							<div class="item col-4">
-								<div class="summary-desc mb-1"><i class="fas fa-bolt me-2"></i> </i>Level</div>
-								<h4 class="summary-heading"> @Model.DifficultyLevel </h4>
-
-							</div><!--//col-->
-							<div class="item col-4">
-								<div class="summary-desc mb-1"><i class="icon fas fa-user-circle me-2"></i>Instructor</div>
-								<h4 class="summary-heading">@Model.Instructor.AppUser.UserName</h4>
-
-							</div><!--//col-->
-						</div><!--//row-->
-					</div><!--//hero-summary-->
-				</div><!--//single-col-max-->
-			</div><!--//container-->
-
-		</section><!--//hero-section-->
-	</header><!--//header-->
-
-	<div class="sections-wrapper">
-
-		<div class="section-blocks mb-5">
-
-			<div id="section-overview" class="section-overview section pt-md-4 pt-lg-5">
-				<div class="container py-5">
-					<div class="section-col-max mx-auto">
-						<h3 class="section-title text-center mb-4">What Will You Learn</h3>
-						<p class="mb-4">@Model.Description</p>
-
-						<!-- if not enrolled -->
-						<!-- <div class="text-center mb-5">
-							<a class="btn btn-primary scrollto" href="#section-pricing">Join Course Now</a>
-						</div> -->
-
-					</div><!--//section-col-max-->
-				</div><!--//container-->
-			</div><!--//section-overview-->
+    <div class="sections-wrapper">
+        <div class="section-blocks mb-5">
+            <div id="section-overview" class="section-overview section pt-md-4 pt-lg-5">
+                <div class="container py-5">
+                    <div class="section-col-max mx-auto">
+                        <h3 class="section-title text-center mb-4">What Will You Learn</h3>
+                        <p class="mb-4">@Model?.Description</p>
+                    </div>
+                </div>
+            </div>
 
 
 
+            <!-- Control Options for Instructor -->
+            @if (User.IsInRole("Instructor")) // Check if the user is an instructor
+            {
+                <div class="text-center mb-5">
+                    <a style="text-decoration: none;" href="@Url.Action("Create", "Lesson", new { courseId = Model.Id })" class="btn btn-success me-2">Add New Lesson</a>
+                </div>
+            }
 
 
-			<!-- Control Options for Instructor -->
-			@if (User.IsInRole("Instructor")) // Check if the user is an instructor
-			{
-				<div class="text-center mb-5">
-					<a style="text-decoration: none;" href="@Url.Action("Create", "Lesson", new { courseId = Model.Id })" class="btn btn-success me-2">Add New Lesson</a>
-					</div>
-			}
+            <div id="section-content" class="section-content section">
+                <div class="container py-5">
+                    <div class="section-col-max mx-auto">
+                        <h3 class="text-center mb-4">Course Content</h3>
+                        <div class="accordion module-accordion" id="module-accordion">
+                            <div class="module-item card">
+                                <div id="module-1" class="module-content collapse show" aria-labelledby="module-heading-1">
+                                    <div class="card-body p-0">
+                                        @{
+                                            int i = 1;
+
+                                        }
+                                        @foreach (var lesson in Model?.Lessons)
+                                        {
+                                            <div class="module-sub-item p-3">
+                                                <div class="row justify-content-between">
+                                                    <div class="col-9">
+                                                        <span class="theme-text-secondary me-2">@i</span>
+                                                        @{
+                                                            i++;
+                                                        }
+                                                        <a class="video-play-trigger" href="#" data-bs-toggle="modal" data-bs-target="#modal-video-@lesson.Id">
+                                                            @lesson.Title
+                                                        </a>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="text-end ">
+                                                    <!-- Edit and Delete buttons beside each lesson -->
+                                                    @if (User.IsInRole("Instructor")) // Check if the user is an instructor
+                                                    {
+                                                        <a style="text-decoration: none;" href="@Url.Action("Edit", "Lesson", new { id = lesson.Id })" class="btn btn-outline-warning btn-sm">Edit</a>
+                                                        <a style="text-decoration: none;" href="@Url.Action("Delete", "Lesson", new { id = lesson.Id })" class="btn btn-outline-danger btn-sm">Delete</a>
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            <div class="modal modal-video" id="modal-video-@lesson.Id" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <button id="closeButton-@lesson.Id" type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true" onclick="stopVideo(@lesson.Id)">&times;</button>
+                                                        <div class="modal-body">
+                                                            <div class="ratio ratio-16x9">
+                                                                @if (!string.IsNullOrEmpty(lesson.FilePath))
+                                                                {
+                                                                    var originalUrl = lesson.FilePath;
+                                                                    var videoId = ExtractYouTubeVideoId(originalUrl);
+                                                                    var embedUrl = $"https://www.youtube.com/embed/{videoId}?enablejsapi=1";
+
+                                                                    <iframe id="videoPlayer-@lesson.Id" width="560" height="315" src="@embedUrl"
+                                                                            data-lesson-id="@lesson.Id"
+                                                                            data-enrollment-id="@Model.Id"
+                                                                            title="YouTube video player"
+                                                                            frameborder="0"
+                                                                            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                            allowfullscreen>
+                                                                    </iframe>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://www.youtube.com/iframe_api"></script>
 
 
 
 
-			<div id="section-content" class="section-content section">
-				<div class="container py-5">
-					<div class="section-col-max mx-auto">
-					<h3 class="text-center mb-4">Course Content</h3>
-					<div class="accordion module-accordion" id="module-accordion">
-
-						<div class="module-item card">
-							
-							<div id="module-1" class="module-content collapse show" aria-labelledby="module-heading-1">
-								<div class="card-body p-0">
-										@{
-											int i = 1;
-										}
-										@foreach( var lesson in Model.Lessons){
-											<div class="module-sub-item p-3">
-												<div class="row justify-content-between">
-													<div class="col-9">
-														<span class="theme-text-secondary me-2">@i</span>
-														@{i++;}
-														<a class="video-play-trigger" href="#" data-bs-toggle="modal" data-bs-target="#modal-video">
-															@* @if (lesson.Iscompleted)
-															{
-																<i class="fas fa-circle-check fa-solid " style="color: #1cb048;"></i>
-															}
-															else
-															{
-																<i class="fas  fa-circle-check fa-regular fa-beat"></i>
-															} *@
-															@lesson.Title
-														</a>
-														
-													</div>
-													<div class ="text-end ">
-														<!-- Edit and Delete buttons beside each lesson -->
-														@if (User.IsInRole("Instructor")) // Check if the user is an instructor
-														{
-															<a style="text-decoration: none;"href="@Url.Action("Edit", "Lesson", new { id = lesson.Id })" class="btn btn-outline-warning btn-sm">Edit</a>
-															<a style="text-decoration: none;" href="@Url.Action("Delete", "Lesson", new { id = lesson.Id })" class="btn btn-outline-danger btn-sm">Delete</a>
-														}
-													</div>
-
-												
-												</div>
-											</div>
-											<!--//module-sub-item-->
-											<!-- Video Modal -->
-											<div class="modal modal-video" id="modal-video" tabindex="-1" role="dialog" aria-hidden="true">
-												<div class="modal-dialog">
-													<div class="modal-content">
-														<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
-														<div class="modal-body">
-															<div class="ratio ratio-16x9">
-																@if (!string.IsNullOrEmpty(lesson.FilePath))
-																{
-																	var originalUrl = lesson.FilePath;
-
-																	var videoId = ExtractYouTubeVideoId(originalUrl);
-
-																	// Construct the embed URL (without the 'v=')
-																	var embedUrl = $"https://www.youtube.com/embed/{videoId}";
-																
-																<iframe width="560" height="315" src="@embedUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-																}
-															</div>
-															
-														</div><!--//modal-body-->
-													</div><!--//modal-content-->
-												</div><!--//modal-dialog-->
-											</div>
-
-											<!--//modal-->
-									}
-
-								</div><!--//card-body-->
-							</div><!--//module-content-->
-						</div><!--//module-item-->
-						<!-- if not enrolled -->
-						<!-- <div class="text-center mt-5">
-								  <a class="btn btn-primary scrollto" href="#section-pricing">Enrol Now</a>
-							  </div>
-						</div> -->
+	<script>
+        ////////////// Close Button //////////////
 
 
-					</div><!--//container-->
-				</div><!--//section-content-->
-			</div>
+        let players = {};
 
-				
-			</div>
-		</div>
-	</div>
+        // Function to initialize or update video players when the modal is shown
+        function initializePlayer(lessonId, iframeId) {
+            if (!players[lessonId]) {
+                players[lessonId] = new YT.Player(iframeId);
+            }
+        }
+
+        // Event listener for showing the modal to reinitialize the player
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('shown.bs.modal', function (event) {
+                const iframe = modal.querySelector('iframe');
+                const lessonId = iframe.getAttribute('data-lesson-id');
+                const iframeId = iframe.id;
+                initializePlayer(lessonId, iframeId);
+            });
+        });
+
+        // Function to stop video playback
+        function stopVideo(lessonId) {
+            if (players[lessonId]) {
+                players[lessonId].stopVideo();
+            }
+        }
+
+        // Event listener for when modals are closed, to stop video automatically
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('hidden.bs.modal', function (event) {
+                const lessonId = modal.querySelector('iframe').getAttribute('data-lesson-id');
+                stopVideo(lessonId);
+                const iframe = modal.querySelector('iframe');
+                const src = iframe.getAttribute('src');
+                iframe.setAttribute('src', '');
+                iframe.setAttribute('src', src);
+            });
+        });
+
+
+
+
+	</script>
 
 
 

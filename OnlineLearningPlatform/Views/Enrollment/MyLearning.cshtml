@@ -2,16 +2,14 @@
 @model IEnumerable<OnlineLearningPlatform.Models.Enrollment>
 
 @{
-    ViewData["Title"] = "MyCourses";
+    ViewData["Title"] = "My Learning";
 }
-
 
 <body>
     <link id="theme-style" rel="stylesheet" href="@Url.Content("~/MyLearning/css/style.css")">
 
     <div class="main-content">
         <div class="container mt-7">
-            <!-- Table -->
             <div class="col">
                 <div class="card shadow">
                     <div class="card-header border-0">
@@ -51,7 +49,6 @@
                                                 @if (@item.CompletionStatus == CompletionStatus.NotStarted)
                                                 {
                                                     <i class="bg-danger"></i>
-
                                                 }
                                                 else if (@item.CompletionStatus == CompletionStatus.InProgress)
                                                 {
@@ -74,17 +71,14 @@
                                                             if (item.Progress == 100)
                                                             {
                                                                 <div class="progress-bar bg-success" role="progressbar" aria-valuenow="@item.Progress" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress%;"></div>
-
                                                             }
                                                             else if (item.Progress < 25)
                                                             {
                                                                 <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="@item.Progress" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress%;"></div>
-
                                                             }
                                                             else
                                                             {
                                                                 <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="@item.Progress" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress%;"></div>
-
                                                             }
                                                         }
                                                     </div>
@@ -94,29 +88,17 @@
 
                                         <td>
                                             <a asp-controller="Enrollment" asp-action="Details" asp-route-id="@item.CourseId" class="btn btn-primary"> GO </a>
-
                                         </td>
                                     </tr>
-
                                 }
-
-
                             </tbody>
                         </table>
                     </div>
-
 
                     <div class="card-footer py-4">
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
-
-
-
 </body>
- 
-
-

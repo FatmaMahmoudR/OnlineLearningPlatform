@@ -7,11 +7,19 @@
                 <div class="card-body">
                     <img src="https://i.pinimg.com/564x/8a/dc/57/8adc57bcd3d3af88f34ff524fe7a136f.jpg" class="profile-photo" alt="Profile Photo">
                     <h4>@Model.Name</h4>
-                    <p class="text-secondary mb-1">@((Model.IsStudent) ? "Student" : "Instructor")</p>
 
-                    <a class="btn btn-link" href="@((Model.IsStudent) ? "/Account/MyProgress" : "/Account/MyCourses")">
-                        @((Model.IsStudent) ? "My Progress" : "My Courses")
-                    </a>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <p class="text-secondary mb-1">Admin</p>
+                    }
+                    else
+                    {
+                        <p class="text-secondary mb-1">@((Model.IsStudent) ? "Student" : "Instructor")</p>
+
+                        <a class="btn btn-link" href="@((Model.IsStudent) ? "/Enrollment/MyLearning" : "/Course/MyCourses")">
+                            @((Model.IsStudent) ? "My Progress" : "My Courses")
+                        </a>
+                    }
                 </div>
             </div>
         </div>

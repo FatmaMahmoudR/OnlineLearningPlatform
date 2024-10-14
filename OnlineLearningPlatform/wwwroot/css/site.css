@@ -24,7 +24,7 @@ body {
 
 
 
-/*Course Landing*/
+Course Landing
 
 .hero-section {position: relative;background-size: cover;min-height: 400px;color: #fff}
   .hero-section .container{position:relative;z-index:10}
@@ -78,4 +78,4 @@ body {
       .tutor-profile{width:180px;margin:0 auto;display:inline-block}
       .plan-item{height:auto}}
 
-/* Course Landing End */
+ Course Landing End 

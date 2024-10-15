@@ -56,6 +56,27 @@ namespace OnlineLearningPlatform.Controllers
             return View(await courses.ToListAsync());
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("Course/Filter/{category}")]
+        public async Task<IActionResult> Filter(Category? category)
+        {
+            // Get the list of courses
+            var courses = from c in _context.Courses
+                          select c;
+
+            // If a category is selected, filter by category
+            if (category != null)
+            {
+                courses = courses.Where(c => c.Category == category);
+            }
+
+            // Retrieve the filtered list
+            var filteredCourses = await courses.ToListAsync();
+
+            return View("Index", filteredCourses); 
+        }
+
 
         // GET: /Course/Details/5
         public async Task<IActionResult> Details(int? id)

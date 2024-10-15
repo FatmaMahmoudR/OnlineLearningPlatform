@@ -1,8 +1,59 @@
-﻿﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="~/css/Home.css">
+</head>
+<body>
+    <!-- home section starts  -->
+    <section class="home">
+        <div class="image">
+            <img src="~/images/home-img.png">
+        </div>
+        <div class="content">
+            <h4>Learning is a treasure that will follow its owner everywhere.</h4>
+            <p>Education facilitates the acquisition of knowledge, skills, values, and habits through various methods like teaching, storytelling, and discussion.</p>
+            <a href="Course/Search" class="btn-start">Get Started</a>
+        </div>
+
+    </section>
+    <!-- home section ends -->
+
+    <!-- categories section starts  -->
+    <section class="category">
+        <a href="#" class="box">
+            <img src="~/images/category-1.png" alt="">
+            <h3>computer science</h3>
+        </a>
+        <a href="#" class="box">
+            <img src="~/images/category-2.png" alt="">
+            <h3>artificial intelligence</h3>
+        </a>
+        <a href="#" class="box">
+            <img src="~/images/category-3.png" alt="">
+            <h3>database management</h3>
+        </a>
+        <a href="#" class="box">
+            <img src="~/images/category-4.png" alt="">
+            <h3>theory of computation</h3>
+        </a>
+        <a href="#" class="box">
+            <img src="~/images/category-5.png" alt="">
+            <h3>cloud computing</h3>
+        </a>
+    </section>
+    <!-- categories section ends -->
+
+   
+    <!-- custom js file link  -->
+    <script src="~/js/script.js"></script>
+
+</body>
+</html>

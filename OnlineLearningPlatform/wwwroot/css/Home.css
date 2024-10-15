@@ -1,0 +1,83 @@
+﻿@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap");
+
+/* Home Section Styling */
+.home {
+	margin-top:20px;
+	font-size: 50%; /* Smaller base size for .home */
+	overflow-x: hidden;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 1rem; /* Reduced gap */
+}
+
+	.home .image {
+		flex: 1 1 30rem; /* Reduced flex size */
+	}
+
+		.home .image img {
+			width: 100%;
+			max-height: 300px; /* Reduced max height for images */
+			object-fit: cover; /* Maintain aspect ratio */
+		}
+
+	.home .content {
+		flex: 1 1 30rem; /* Reduced flex size */
+		margin-top: 1rem; /* Added margin for space between image and text */
+	}
+
+		.home .content h3 {
+			color: #302851;
+			font-size: 2rem; /* Smaller heading size */
+		}
+
+		.home .content p {
+			font-size: 1rem; /* Smaller paragraph size */
+			color: #666;
+			padding: 0.5rem 0; /* Reduced padding */
+			line-height: 1.4; /* Adjust line height for readability */
+		}
+
+/* Button Styles */
+.btn-start {
+	display: inline-block;
+	margin-top: 0.5rem; /* Reduced margin */
+	padding: 0.5rem 2rem; /* Reduced padding */
+	background: #e9edfb;
+	text-decoration: none;
+	color: #224bcf;
+	cursor: pointer;
+	border-radius: .5rem;
+	font-size: 1.2rem; /* Smaller button font size */
+}
+
+	.btn-start:hover {
+		transition: background 1s, color 1s; /* Added transition effect */
+		color: #fff;
+		background: #224bcf;
+	}
+
+/* Category Styles */
+.category {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); /* Reduced min size */
+	gap: 1rem; /* Reduced gap */
+	margin-top: 60px; /* Added margin-top for spacing from home section */
+}
+
+	.category .box {
+		border-radius: 1rem;
+		background: #f5f5f5;
+		padding: 2rem 1rem; /* Reduced padding */
+		text-align: center;
+	}
+
+		.category .box img {
+			height: 5rem; /* Reduced height for category images */
+			margin-bottom: 1rem; /* Reduced margin */
+		}
+
+		.category .box h3 {
+			font-size: 1.5rem; /* Smaller category heading size */
+			color: #302851;
+		}

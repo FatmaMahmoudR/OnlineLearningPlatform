@@ -30,19 +30,64 @@
     {
         <a asp-controller="Course" asp-action="Create" class="btn btn-create">Create New</a>
     }
-</div>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DifficultyLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EnrollmentCount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DifficultyLevel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EnrollmentCount)
+                </td>
+                <td>
 
-<div class="course-cards">
-    @foreach (var item in Model)
-    {
-        <div class="card">
-            <div class="photo">
-                <img src="https://i.pinimg.com/564x/77/e0/a0/77e0a0892c06b5877c3c2fd8dc40b2cd.jpg" alt="@item.Name" />
-            </div>
-            <div class="description">
-                <h3 style="font-weight: bold;">@Html.DisplayFor(modelItem => item.Name)</h3>
-                <div class="button-group">
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-detail">More Details</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <text>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
+
+                            <a href="#myModal" class="btn btn-primary" data-toggle="modal">Delete</a> |
+
+                            <!-- Modal HTML -->
+                            <div id="myModal" class="modal fade">
+                                <div class="modal-dialog modal-confirm">
+                                    <div class="modal-content">
+                                        <div class="modal-header flex-column">
+                                            <i class="fas fa-circle-xmark fa-4x" style="color: #cc2e36;"></i>
+                                            <h4 class="modal-title w-100">Are you sure?</h4>
+                                        </div>
 
                     @if (User.IsInRole("Student"))
                     {

@@ -32,8 +32,6 @@ namespace OnlineLearningPlatform.Models
 
             //related tables
             builder.Entity<Enrollment>().HasQueryFilter(e => !EF.Property<bool>(e.Course, "Deleted"));
-            builder.Entity<LessonCompletion>().HasQueryFilter(e => !EF.Property<bool>(e.Enrollment, "Deleted"));
-
 
             // Configuring Enrollment with no cascade delete on Student and Course
             builder.Entity<Enrollment>()

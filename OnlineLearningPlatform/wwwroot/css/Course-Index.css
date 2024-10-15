@@ -1,0 +1,154 @@
+﻿.search-create-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .search-form {
+        flex: 1;
+    }
+
+    .input-group {
+        display: flex;
+    }
+
+    /* Adjust the search button */
+    .search-btn {
+        height: 35px; 
+        padding: 0; 
+        border-radius: 5px; 
+        width: 130px;
+        border: none; 
+    }
+
+    #search-input {
+        height: 35px;
+        border: none; 
+        width: 350px; 
+        margin: 0; 
+        border: 1px solid #ccc; 
+    }
+
+    .btn-create {
+        display: inline-block;
+        margin-top: 0.5rem;
+        padding: 0.5rem 0.7rem ;
+        background: #e9edfb;
+        text-decoration: none;
+        color: #224bcf;
+        border: 1px solid #224bcf;
+        cursor: pointer;
+        border-radius: .5rem;
+        font-size: 1.2rem;
+    }
+
+        .btn-create:hover {
+            transition: background 1s, color 1s;
+            color: #fff;
+            background: #224bcf;
+        }
+
+    .course-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: center;
+    }
+
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        width: 340px; /* Increased width for larger cards */
+        overflow: hidden;
+        transition: transform 0.3s;
+        margin-top: 25px;
+    }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+    .photo {
+        width: 100%;
+        text-align: center;
+        overflow: hidden;
+    }
+
+        .photo img {
+            max-height: 160px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+    .description {
+        padding: 15px;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    .btn-detail {
+        border: 1px solid #423DC2;
+        background: #423DC2;
+        color: white;
+        padding: 8px 16px;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+        .btn-detail:hover {
+            border: 1px solid #423DC2;
+            background: white;
+            color: #423DC2;
+            transition: background 0.5s, color 0.5s;
+        }
+
+    .btn-enroll {
+        border: 1px solid #4CAF50;
+        background: none;
+        color: #4CAF50;
+        padding: 8px 16px;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+        .btn-enroll:hover {
+            background: #4CAF50;
+            color: white;
+            transition: background 0.5s, color 0.5s;
+        }
+
+    .btn-edit {
+        border: 1px solid #44D244;
+        background: #44D244;
+        color: white;
+        padding: 8px 16px;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+        .btn-edit:hover {
+            background: white;
+            color: #44D244;
+            transition: background 0.5s, color 0.5s;
+        }
+
+    .btn-delete {
+        border: 1px solid #cc2e36;
+        background: #cc2e36;
+        color: white;
+        padding: 8px 16px;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+        .btn-delete:hover {
+            background: white;
+            color: #cc2e36;
+            transition: background 0.5s, color 0.5s;
+        }

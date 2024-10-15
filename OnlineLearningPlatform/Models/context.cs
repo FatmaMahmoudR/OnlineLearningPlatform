@@ -32,6 +32,7 @@ namespace OnlineLearningPlatform.Models
 
             //related tables
             builder.Entity<Enrollment>().HasQueryFilter(e => !EF.Property<bool>(e.Course, "Deleted"));
+            builder.Entity<LessonCompletion>().HasQueryFilter(e => !EF.Property<bool>(e.Enrollment, "Deleted"));
 
 
             // Configuring Enrollment with no cascade delete on Student and Course
@@ -209,7 +210,7 @@ namespace OnlineLearningPlatform.Models
                     Id = 1,
                     Name = "ASP.NET Core",
                     Description = "Learn the basics of ASP.NET Core",
-                    Category = "Back-end",
+                    Category = Category.Web,
                     DifficultyLevel = DifficultyLevel.Beginner,
                     EnrollmentCount = 0,
                     InstructorId = 1 // instructor1
@@ -219,7 +220,7 @@ namespace OnlineLearningPlatform.Models
                     Id = 2,
                     Name = "Entity Framework Core",
                     Description = "Master EF Core",
-                    Category = "Back-end",
+                    Category = Category.Web,
                     DifficultyLevel = DifficultyLevel.Intermediate,
                     EnrollmentCount = 0,
                     InstructorId = 2 // instructor2

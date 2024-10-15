@@ -69,6 +69,8 @@
 		background: #f5f5f5;
 		padding: 2rem 1rem; /* Reduced padding */
 		text-align: center;
+		text-decoration: none;
+		transition: all 0.3s;
 	}
 
 		.category .box img {
@@ -78,5 +80,16 @@
 
 		.category .box h3 {
 			font-size: 1.5rem; /* Smaller category heading size */
-			color: #302851;
+			color: black;
+			text-align: center;
+			margin-top: 15px;
 		}
+
+		 
+
+        .category .box:hover {
+            color: yellow; 
+            box-shadow: 0 4px 20px rgba(255, 255, 0, 1); 
+        }
+
+

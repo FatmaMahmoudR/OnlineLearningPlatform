@@ -2,7 +2,6 @@
 
 /* Home Section Styling */
 .home {
-	margin-top:20px;
 	font-size: 50%; /* Smaller base size for .home */
 	overflow-x: hidden;
 	display: flex;

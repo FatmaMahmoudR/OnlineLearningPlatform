@@ -28,25 +28,25 @@
 
     <!-- categories section starts  -->
     <section class="category">
-        <a href="#" class="box">
+        <a href="@Url.Action("Filter", "Course", new { category = 0 })" class="box">
             <img src="~/images/category-1.png" alt="">
-            <h3>computer science</h3>
+            <h3>Web Development</h3>
         </a>
-        <a href="#" class="box">
-            <img src="~/images/category-2.png" alt="">
-            <h3>artificial intelligence</h3>
-        </a>
-        <a href="#" class="box">
+        <a href="@Url.Action("Filter", "Course", new { category = 1 })" class="box">
             <img src="~/images/category-3.png" alt="">
-            <h3>database management</h3>
+            <h3>Artificial Intelligence</h3>
         </a>
-        <a href="#" class="box">
-            <img src="~/images/category-4.png" alt="">
-            <h3>theory of computation</h3>
-        </a>
-        <a href="#" class="box">
+        <a href="@Url.Action("Filter", "Course", new { category = 2 })" class="box">
             <img src="~/images/category-5.png" alt="">
-            <h3>cloud computing</h3>
+            <h3>Cloud Computing</h3>
+        </a>
+        <a href="@Url.Action("Filter", "Course", new { category = 3 })" class="box">
+            <img src="~/images/category-4.png" alt="">
+            <h3>Cyber Security</h3>
+        </a>
+        <a href="@Url.Action("Filter", "Course", new { category = 4 })" class="box">
+            <img src="~/images/category-2.png" alt="">
+            <h3>Computer Network</h3>
         </a>
     </section>
     <!-- categories section ends -->
@@ -56,4 +56,9 @@
     <script src="~/js/script.js"></script>
 
 </body>
+
+<
+<style>
+   
+</style>
 </html>

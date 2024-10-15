@@ -36,9 +36,7 @@
                         {
                             // Add admin-specific links here if needed
                         }
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Index"><i class="fas fa-solid fa-book"></i> Courses</a>
-                        </li>
+                        
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Instructor"))
                         {
                             <li>

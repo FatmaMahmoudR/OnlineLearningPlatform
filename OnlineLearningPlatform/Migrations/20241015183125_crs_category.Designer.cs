@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineLearningPlatform.Models;
 
@@ -11,9 +12,11 @@ using OnlineLearningPlatform.Models;
 namespace OnlineLearningPlatform.Migrations
 {
     [DbContext(typeof(context))]
-    partial class contextModelSnapshot : ModelSnapshot
+    [Migration("20241015183125_crs_category")]
+    partial class crs_category
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -405,16 +408,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4ac66",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "427dfadb-5be2-4045-8682-60377a383891",
+                            ConcurrencyStamp = "eca215c6-9a93-46ab-8aaa-fcb8efe548df",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDecSX01no3plSAwN8rc3FGwq+fkENr+wpiUFABNPjbMs9M9uUwUOxKwgqgo9VJfRA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIMYrM0gBKdn3N5nNLGGdC5SmiP2NgudYD83Y2A578q28Vvca7CP7JkzrSdTG/7MxQ==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "bfc6ecf7-d4a3-4fec-b9e7-82eb3129dc84",
+                            SecurityStamp = "446762e1-bfaa-4482-93d6-00c01ad98ff1",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         },
@@ -422,16 +425,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4a001",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "56a3a292-ea82-43ac-9960-ead3de82a7ac",
+                            ConcurrencyStamp = "83cd5c72-91f3-4883-a591-9d754987dae7",
                             Email = "instructor1@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "INSTRUCTOR1@USER.COM",
                             NormalizedUserName = "INSTRUCTOR1",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDn1fwLTOk7hRANlraUklZkrMug9x1S0Bid95ZR0p7/QJo1hkpLwW2i/W+n0+Pd40g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDHX0mb3cxJeyhuoGbiLT+7qDhLBOYlCywLFge3UZDCDca+FWSRBMlM9v3UDJnlH+g==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "3034bb00-0838-4e58-9362-11970ef71045",
+                            SecurityStamp = "6134d7de-f558-4461-9e21-5a9a05e515d4",
                             TwoFactorEnabled = false,
                             UserName = "instructor1"
                         },
@@ -439,16 +442,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4a002",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "976f807a-5d4b-42d2-9811-437d064ea8ce",
+                            ConcurrencyStamp = "da907a4b-e196-472d-bfdb-a592d9d20e37",
                             Email = "instructor2@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "INSTRUCTOR2@USER.COM",
                             NormalizedUserName = "INSTRUCTOR2",
-                            PasswordHash = "AQAAAAIAAYagAAAAEI/5XBOAoWpf1j9bJnR+NaY5xWdPHMxJrHEUk2Q2RDCr0IkMvVNKfGjAPbhxny1JXg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOwdOqCrOKzmurOUwR03t3nPvC5Jes5xlpChPnQj60OhXEEiLObIDNlatmnVjzS2YA==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "7679d8b7-5fd9-4b1f-b6f8-1d589cd2d297",
+                            SecurityStamp = "c8b331d8-4066-4dfc-a625-d4f3e57872a7",
                             TwoFactorEnabled = false,
                             UserName = "instructor2"
                         },
@@ -456,16 +459,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4a111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "98f2655f-18d1-467b-a52f-767d7d67739a",
+                            ConcurrencyStamp = "955a0064-b747-48f9-b67e-263e92922760",
                             Email = "student1@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "STUDENT1@USER.COM",
                             NormalizedUserName = "STUDENT1",
-                            PasswordHash = "AQAAAAIAAYagAAAAEL76ejtzI7iKVbcNU2DXVf7sjG3QTdzBC5PNoFdtopD6U6+cliZ+voOgPgKabeMmeQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOILHby4u6Ne2SIiDyq+7LE/H4Zm2TIKctQ0CGYF6iP/EJK9f0mz+xmrdlFPP5QRLA==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "69fa3d5c-776d-4550-9203-6d8427775500",
+                            SecurityStamp = "d6570f94-9a21-48e7-ba88-067987475ca3",
                             TwoFactorEnabled = false,
                             UserName = "student1"
                         },
@@ -473,16 +476,16 @@ namespace OnlineLearningPlatform.Migrations
                         {
                             Id = "62fe5285-fd68-4711-ae93-673787f4a112",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8b1368db-8c33-4c1f-9d63-94cf0247a6b9",
+                            ConcurrencyStamp = "2fe57093-4a1d-4b54-b1b4-8503e717dcb6",
                             Email = "student2@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "STUDENT2@USER.COM",
                             NormalizedUserName = "STUDENT2",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMBC1C04LxvCRUAnoIybZjJAddIAMWPa+POgk6HJKI0ANSTgJCAYIrbDdhUNik78Gg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJxBmZCuk2tMc7nQWVw6eD5kFvSg+HpmzIInB5tQ/rbKJy3bV0qog0uZhs3xXyfDXg==",
                             PhoneNumberConfirmed = false,
                             RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "7fa8126a-6b65-4ec0-bab7-f066176a3562",
+                            SecurityStamp = "1b6106d8-498b-4c31-9cb7-f684b7e06616",
                             TwoFactorEnabled = false,
                             UserName = "student2"
                         });

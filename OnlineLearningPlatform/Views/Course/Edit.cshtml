@@ -6,55 +6,117 @@
     SelectList Instructorlist = new SelectList(ViewBag.instructors, "Id", "AppUser.UserName");
 }
 
-<h1>Edit Course</h1>
 
-<form class="justify-content-center" asp-action="Edit">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="container py-5">
+        <!-- title-->
+        <div class="row mb-4">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-6"> Edit Course </h1>
+            </div>
+        </div> 
+        <!-- End -->
 
-    <div class="form-group col-16 col-md-8">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
+        <div class="row">
+            <div class="col-lg-6 mx-auto ">
+            <div class="card shadow-lg rounded">
+                    <div class="card-header">
 
-    <div class="form-group col-16 col-md-8">
-        <label asp-for="Description" class="control-label"></label>
-        <input asp-for="Description" class="form-control" />
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+                    <div class="tab-content ">
 
-    <div class="form-group col-16 col-md-8">
-        <label asp-for="Category" class="control-label"></label>
-        <input asp-for="Category" class="form-control" />
-        <span asp-validation-for="Category" class="text-danger"></span>
-    </div>
+                        <div id="credit-card" class="tab-pane fade show active  p-5">
+                            <form role="form" asp-action="Edit">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="form-group col-16 col-md-8">
-        <label asp-for="DifficultyLevel" class="control-label"></label>
-        <select asp-for="DifficultyLevel" asp-items="levels" class="form-control"></select>
-        <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
-    </div>
+                                <div class="form-group ">
+                                    <label asp-for="Name" class="control-label">
+                                        <h6>Name</h6>
+                                    </label>
+                                    <input asp-for="Name" class="form-control" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
 
-    <div class="form-group col-16 col-md-8">
-        <label asp-for="InstructorId" class="control-label"></label>
-        <select asp-for="InstructorId" class="form-control" asp-items="Instructorlist"></select>
-        <span asp-validation-for="InstructorId" class="text-danger"></span>
-    </div>
+                                <div class="form-group ">
+                                    <label asp-for="Description" class="control-label">
+                                        <h6>Description</h6>
+                                    </label>
+                                    <input asp-for="Description" class="form-control" />
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
 
-    <div class="form-group row pt-3">
-        <div class="col-8 col-md-4">
-            <button type="submit" class="btn btn-primary form-control">Save</button>
+                                <div class="form-group ">
+                                    <label asp-for="Category" class="control-label">
+                                        <h6>Category</h6>
+                                    </label>
+                                    <input asp-for="Category" class="form-control" />
+                                    <span asp-validation-for="Category" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group ">
+                                    <label asp-for="DifficultyLevel" class="control-label">
+                                        <h6>Difficulty Level</h6>
+                                    </label>
+                                    <select asp-for="DifficultyLevel" asp-items="levels" class="form-control"></select>
+                                    <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group ">
+                                    <label asp-for="InstructorId" class="control-label">
+                                        <h6>Instructor</h6>
+                                    </label>
+                                    <select asp-for="InstructorId" class="form-control" asp-items="Instructorlist"></select>
+                                    <span asp-validation-for="InstructorId" class="text-danger"></span>
+                                </div>
+                              
+
+
+                                <div class=" row pt-3 justify-content-center">
+                                    <div class="col-10 col-md-4 ">
+                                        <button type="submit" class="subscribe btn btn-primary btn-block shadow-sm form-control " value="Save">Save</button>
+                                    </div>
+                                    <div class="col-8 col-md-4">
+                                        <a asp-controller="Course" asp-action="Index"  class="subscribe btn btn-primary btn-block shadow-sm  form-control"> Back</a>
+                                    </div>
+                                </div>
+
+                            </form>
+                            </div>
+                        </div> <!-- End -->
+                        
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-8 col-md-4">
-            <a asp-controller="Course" asp-action="Index" class="btn btn-outline-primary border form-control">
-                Back
-            </a>
-        </div>
-    </div>
-</form>
+</div>
+
+    <style>
+
+        .rounded {
+            border-radius: 15rem
+        }
+
+        .nav-pills .nav-link {
+            color: #555
+        }
+
+            .nav-pills .nav-link.active {
+                color: white
+            }
+
+        input[type="radio"] {
+            margin-right: 5px
+        }
+
+        .bold {
+            font-weight: bold
+        }
+    </style>
+
+    
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
+

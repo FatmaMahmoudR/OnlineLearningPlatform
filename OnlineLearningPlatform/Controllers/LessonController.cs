@@ -24,28 +24,6 @@ namespace OnlineLearningPlatform.App.Controllers
             _userManager = userManager; 
         }
 
-        //// GET: /Lesson/Index?courseId=1
-        //public async Task<IActionResult> Index(int courseId)
-        //{
-        //    var instructorId = await _context.Instructors
-        //        .Where(i => i.AppUserId == _userManager.GetUserId(User))
-        //        .Select(i => i.Id)
-        //        .FirstOrDefaultAsync();
-
-        //    var course = await _context.Courses
-        //                               .Include(c => c.Lessons)
-        //                               .FirstOrDefaultAsync(c => c.Id == courseId && c.InstructorId == instructorId && !EF.Property<bool>(c, "Deleted"));
-
-        //    if (course == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    ViewBag.CourseId = courseId;
-        //    ViewBag.CourseTitle = course.Name;
-        //    return View(course.Lessons);
-        //}
-
         // GET: /Lesson/Details/5
         public async Task<IActionResult> Details(int id)
         {
@@ -188,37 +166,36 @@ namespace OnlineLearningPlatform.App.Controllers
             return _context.Lessons.Any(e => e.Id == id);
         }
 
-        // GET: /Lesson/Delete/5
+        // POST: /Lesson/Delete/5 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var lesson = await _context.Lessons.Include(l => l.Course)
+            // Fetch the lesson along with its course
+            var lesson = await _context.Lessons
+                .Include(l => l.Course)
                 .FirstOrDefaultAsync(l => l.Id == id && !EF.Property<bool>(l, "Deleted"));
 
-            if (lesson == null || lesson.Course.InstructorId != (await _context.Instructors.Where(i => i.AppUserId == _userManager.GetUserId(User)).Select(i => i.Id).FirstOrDefaultAsync()))
+            // Check if the lesson exists and if the user is the instructor
+            if (lesson == null || lesson.Course.InstructorId !=
+                (await _context.Instructors
+                    .Where(i => i.AppUserId == _userManager.GetUserId(User))
+                    .Select(i => i.Id)
+                    .FirstOrDefaultAsync()))
             {
                 return NotFound();
             }
 
-            return View(lesson);
-        }
+            // Perform the soft delete by marking the 'Deleted' property
+            _context.Entry(lesson).Property("Deleted").CurrentValue = true;
+            await _context.SaveChangesAsync();
 
-        // POST: /Lesson/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var lesson = await _context.Lessons.FindAsync(id);
-            if (lesson != null)
-            {
-
-                _context.Entry(lesson).Property("Deleted").CurrentValue = true;
-                await _context.SaveChangesAsync();
-            }
-
+            // Redirect back to the course's details page
             return RedirectToAction("Details", "Course", new { id = lesson.CourseId });
         }
 
-     
+
+
 
     }
 }

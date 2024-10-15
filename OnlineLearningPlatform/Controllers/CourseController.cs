@@ -282,59 +282,12 @@ namespace OnlineLearningPlatform.Controllers
 
 
 
-
-
-
-        // GET: /Course/Delete/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            
-            var course = await _context.Courses
-                .IgnoreQueryFilters() 
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (course == null)
-            {
-                return NotFound();
-            }
-
-            // Check if the course is deleted 
-            if (_context.Entry(course).Property<bool>("Deleted").CurrentValue)
-            {
-                return NotFound();
-            }
-
-            // Ensure instructors can only delete their own courses
-            if (User.IsInRole("Instructor"))
-            {
-                var instructorId = await _context.Instructors
-                    .Where(i => i.AppUserId == _userManager.GetUserId(User))
-                    .Select(i => i.Id)
-                    .FirstOrDefaultAsync();
-
-                if (course.InstructorId != instructorId)
-                {
-                    return Unauthorized();
-                }
-            }
-
-            return View(course);
-        }
-
-        // POST: /Course/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Instructor")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var course = await _context.Courses
-                .IgnoreQueryFilters() 
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var course = await _context.Courses.IgnoreQueryFilters().FirstOrDefaultAsync(m => m.Id == id);
 
             if (course == null)
             {
@@ -355,20 +308,18 @@ namespace OnlineLearningPlatform.Controllers
                 }
             }
 
-            // Set the shadow property to true for soft delete
+            // Soft delete - set the shadow property 'Deleted' to true
             _context.Entry(course).Property("Deleted").CurrentValue = true;
-
             _context.Courses.Update(course);
-
             await _context.SaveChangesAsync();
 
             // Redirect based on the user role
             if (User.IsInRole("Instructor"))
             {
-                return RedirectToAction("MyCourses", "Course"); 
+                return RedirectToAction("MyCourses", "Course");
             }
-            //admin
-            return RedirectToAction(nameof(Index)); 
+
+            return RedirectToAction(nameof(Index));
         }
 
 

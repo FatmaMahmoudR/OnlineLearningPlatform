@@ -112,8 +112,44 @@
                                                     <!-- Edit and Delete buttons beside each lesson -->
                                                     @if (User.IsInRole("Instructor")) // Check if the user is an instructor
                                                     {
-                                                        <a style="text-decoration: none;" href="@Url.Action("Edit", "Lesson", new { id = lesson.Id })" class="btn btn-outline-warning btn-sm">Edit</a>
-                                                        <a style="text-decoration: none;" href="@Url.Action("Delete", "Lesson", new { id = lesson.Id })" class="btn btn-outline-danger btn-sm">Delete</a>
+                                                        <text>
+                                                            <a style="text-decoration: none;" href="@Url.Action("Edit", "Lesson", new { id = lesson.Id })" class="btn btn-outline-warning btn-sm">Edit</a>
+
+                                                            <a style="text-decoration: none;" href="#deleteModal-@lesson.Id" class="btn btn-outline-danger btn-sm" data-toggle="modal">Delete</a>
+
+                                                            <!-- Delete Confirmation Modal -->
+                                                            <div id="deleteModal-@lesson.Id" class="modal fade">
+                                                                <div class="modal-dialog modal-confirm">
+                                                                    <div class="modal-content">
+
+                                                                        <div class="modal-header flex-column">
+                                                                            <i class="fas fa-circle-xmark fa-4x" style="color: #cc2e36;"></i>
+                                                                            <h4 class="modal-title w-100">Are you sure?</h4>
+                                                                        </div>
+
+
+                                                                        <div class="modal-body">
+                                                                            <p> Delete Lesson : "<span class="fs-6">@lesson.Title</span>" </p>
+                                                                            <p>This process cannot be undone.</p>
+                                                                        </div>
+
+
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                            <form asp-controller="Lesson" asp-action="Delete" method="post">
+                                                                                <input type="hidden" name="id" value="@lesson.Id" />
+                                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                                            </form>
+
+                                                                        </div>
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </text>
+                                                        
                                                     }
                                                 </div>
                                             </div>
@@ -208,6 +244,44 @@
 
 	</script>
 
+    <style>
+        body {
+            font-family: 'Varela Round', sans-serif;
+        }
+
+        .modal-confirm {
+            width: 400px;
+        }
+
+            .modal-confirm .modal-content {
+                padding: 20px;
+                border-radius: 5px;
+                border: none;
+                text-align: center;
+                font-size: 14px;
+            }
+
+            .modal-confirm .modal-header {
+                border-bottom: none;
+                position: relative;
+            }
+
+            .modal-confirm h4 {
+                text-align: center;
+                font-size: 26px;
+                margin: 30px 0 -10px;
+            }
+
+
+            .modal-confirm .modal-footer {
+                border: none;
+                text-align: center;
+                border-radius: 5px;
+                font-size: 13px;
+                padding: 10px 15px 25px;
+            }
+
+    </style>
 
 
 </body>

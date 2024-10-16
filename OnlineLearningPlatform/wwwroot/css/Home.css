@@ -85,11 +85,11 @@
 			margin-top: 15px;
 		}
 
-		 
 
-        .category .box:hover {
-            color: palevioletred; 
-            box-shadow: 0 4px 20px rgba(255, 255, 0, 1); 
-        }
+
+		.category .box:hover {
+			color: crimson;
+			box-shadow: 0 4px 20px crimson;
+		}
 
 

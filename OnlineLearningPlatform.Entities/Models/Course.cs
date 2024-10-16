@@ -18,6 +18,8 @@ namespace OnlineLearningPlatform.Models
         [NotMapped]
         public IFormFile? ImageFile { get; set; }
 
+        public bool Modified { get; set; } = false;
+
 
         [ForeignKey("Instructor")]
         public int InstructorId { get; set; }

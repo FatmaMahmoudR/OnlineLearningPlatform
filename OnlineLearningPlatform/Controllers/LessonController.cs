@@ -67,6 +67,28 @@ namespace OnlineLearningPlatform.App.Controllers
                 lesson.Course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == lesson.CourseId);
                 _context.Lessons.Add(lesson);
                 await _context.SaveChangesAsync();
+
+                var crs_id = lesson.CourseId;
+
+                var Enrollments = await _context.Enrollments.Where(e=>e.CourseId== crs_id).ToListAsync();
+
+                var e_ids = Enrollments.Select(e => e.Id).ToList();
+                foreach(var i in e_ids)
+                {
+                    LessonCompletion lessonCompletion = new LessonCompletion();
+                    lessonCompletion.LessonId = lesson.Id;
+                    lessonCompletion.EnrollmentId = i;
+
+                    _context.LessonCompletions.Add(lessonCompletion);
+                    await _context.SaveChangesAsync();
+
+                    // Mark the course as modified ---> to update progress value
+                    lesson.Course.Modified = true;
+                    _context.Courses.Update(lesson.Course);
+                    await _context.SaveChangesAsync();
+
+                }
+
                 return RedirectToAction("Details", "Course", new { id = lesson.CourseId });
 
                 
@@ -82,6 +104,7 @@ namespace OnlineLearningPlatform.App.Controllers
             var lesson = await _context.Lessons
                 .Include(l => l.Course)
                 .FirstOrDefaultAsync(m => m.Id == id && !EF.Property<bool>(m, "Deleted"));
+
 
             if (lesson == null)
             {
@@ -188,6 +211,11 @@ namespace OnlineLearningPlatform.App.Controllers
 
             // Perform the soft delete by marking the 'Deleted' property
             _context.Entry(lesson).Property("Deleted").CurrentValue = true;
+            await _context.SaveChangesAsync();
+
+            // Mark the course as modified ---> to update progress value
+            lesson.Course.Modified = true;
+            _context.Courses.Update(lesson.Course);
             await _context.SaveChangesAsync();
 
             // Redirect back to the course's details page

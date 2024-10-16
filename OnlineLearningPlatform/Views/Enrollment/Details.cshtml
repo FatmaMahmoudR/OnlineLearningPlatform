@@ -96,8 +96,8 @@
                                                            var lesson_enroll= Model.LessonCompletions.FirstOrDefault(l => l.LessonId == lesson.Id);
                                                         }
                                                         <a class="video-play-trigger" href="#" data-bs-toggle="modal" data-bs-target="#modal-video-@lesson.Id">
-                                                            
-                                                            @if (lesson_enroll.IsCompleted)
+
+                                                            @if (lesson_enroll!=null && lesson_enroll.IsCompleted)
                                                             {
                                                                 <i class="fas fa-circle-check fa-solid" style="color: #1cb048;"></i>
                                                             }

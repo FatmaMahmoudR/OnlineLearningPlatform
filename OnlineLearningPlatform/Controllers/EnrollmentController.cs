@@ -23,6 +23,8 @@ namespace OnlineLearningPlatform.App.Controllers
 		}
 
 
+
+
 		//Enrollment/Details/1
 		public async Task<IActionResult> Details(int? id) //crs id
 		{
@@ -65,8 +67,11 @@ namespace OnlineLearningPlatform.App.Controllers
 		}
 
 
+
+
         public async Task<IActionResult> MyLearning()
         {
+
             var currentUser = await _userManager.GetUserAsync(User);
 
             var student = await _context.Students
@@ -92,9 +97,22 @@ namespace OnlineLearningPlatform.App.Controllers
             {
                 return NotFound("You are not enrolled in this course.");
             }
+            //if any modified course --> re-calc Progress & change status 
+            foreach(var e in enrollments)
+            {
+                if (e.Course.Modified == true)
+                {
+                    UpdateProgress(e.Id);
+                    changeCompletionStatus(e.Id);
+
+                }
+
+            }
+            //enrollments.FirstOrDefault(e => e.Id == 1).Progress=0;
 
             return View(enrollments);
         }
+
 
 
 
@@ -146,7 +164,7 @@ namespace OnlineLearningPlatform.App.Controllers
                     await _context.SaveChangesAsync();
 
                     // update progress 
-                    UpdateProgressAfterLessonCompletion(enrollmentId);
+                    UpdateProgress(enrollmentId);
 
                     // change enrollment completion status
                     changeCompletionStatus(enrollmentId);
@@ -164,7 +182,9 @@ namespace OnlineLearningPlatform.App.Controllers
 
 
 
-        public void UpdateProgressAfterLessonCompletion(int enrollmentId)
+
+        //After lesson completion || id course is modified
+        public void UpdateProgress(int enrollmentId)
         {
             var enrollment = _context.Enrollments
                 .Include(e => e.Course)
@@ -188,6 +208,9 @@ namespace OnlineLearningPlatform.App.Controllers
             enrollment.Progress = (int)progress;
             _context.SaveChanges();
         }
+
+
+
 
         public void changeCompletionStatus(int enrollmentId)
         {

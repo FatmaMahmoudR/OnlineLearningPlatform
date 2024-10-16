@@ -28,7 +28,7 @@
                     <div class="tab-content ">
 
                         <div id="credit-card" class="tab-pane fade show active  p-5">
-                                <form role="form" asp-action="Create">
+                            <form role="form" asp-action="Create" enctype="multipart/form-data">
                                     <div class="form-group ">
                                         <label asp-for="Name" class="control-label">
                                             <h6>Name</h6>
@@ -36,6 +36,13 @@
                                         <input asp-for="Name" class="form-control" />
                                         <span asp-validation-for="Name" class="text-danger"></span>
                                     </div>
+
+                                <div class="form-group">
+                                    <label asp-for="ImageFile" class="control-label">
+                                        <h6>Image</h6>
+                                    </label>
+                                    <input asp-for="ImageFile" class="form-control" onchange="loadFile(event)" />
+                                </div>
 
                                     <div class="form-group">
                                         <label asp-for="Description" class="control-label">
@@ -119,6 +126,18 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+
+        var loadFile = function (event) {
+            var output = document.getElementById("output");
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function () {
+                URL.revokeObjectURL(output.src);
+            }
+        }
+    </script>
+}
 }
 
 

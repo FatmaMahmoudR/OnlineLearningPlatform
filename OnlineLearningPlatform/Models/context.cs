@@ -211,7 +211,8 @@ namespace OnlineLearningPlatform.Models
                     Category = Category.Web,
                     DifficultyLevel = DifficultyLevel.Beginner,
                     EnrollmentCount = 0,
-                    InstructorId = 1 // instructor1
+                    InstructorId = 1, // instructor1
+                    Image = "\\Images\\CoursesImages\\031eb752-5090-48e5-8c91-8c6982d19f22_.net.PNG"
                 },
                 new Course
                 {
@@ -221,7 +222,8 @@ namespace OnlineLearningPlatform.Models
                     Category = Category.Web,
                     DifficultyLevel = DifficultyLevel.Intermediate,
                     EnrollmentCount = 0,
-                    InstructorId = 2 // instructor2
+                    InstructorId = 2, // instructor2
+                    Image = "\\Images\\CoursesImages\\124301a1-317a-4209-b6b7-e23c8acec6d0_ef.PNG"
                 }
             );
 

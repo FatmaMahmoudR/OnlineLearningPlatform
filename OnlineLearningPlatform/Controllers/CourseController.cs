@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using OnlineLearningPlatform.App.interfaces;
 using OnlineLearningPlatform.Entities.Models;
 using OnlineLearningPlatform.Helpers;
 using OnlineLearningPlatform.Models;
@@ -18,11 +20,15 @@ namespace OnlineLearningPlatform.Controllers
     {
         private readonly context _context;
         private readonly UserManager<AppUser> _userManager;
+        private IWebHostEnvironment _environment;
+        private IUploudFile _uploadFile;
 
-        public CourseController(context context, UserManager<AppUser> userManager)
+        public CourseController(context context, UserManager<AppUser> userManager, IWebHostEnvironment environment, IUploudFile uploadFile)
         {
             _context = context;
             _userManager = userManager;
+            _environment = environment;
+            _uploadFile = uploadFile;
         }
 
         [AllowAnonymous]
@@ -199,6 +205,12 @@ namespace OnlineLearningPlatform.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (course.ImageFile != null)
+                {
+                    string FilePath = await _uploadFile.UploadFileAsync("\\Images\\CoursesImages\\", course.ImageFile);
+                    course.Image = FilePath;
+                }
+
                 _context.Add(course);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -277,6 +289,11 @@ namespace OnlineLearningPlatform.Controllers
             {
                 try
                 {
+                    if (course.ImageFile != null)
+                    {
+                        string FilePath = await _uploadFile.UploadFileAsync("\\Images\\CoursesImages\\", course.ImageFile);
+                        course.Image = FilePath;
+                    }
                     _context.Update(course);
                     await _context.SaveChangesAsync();
                 }

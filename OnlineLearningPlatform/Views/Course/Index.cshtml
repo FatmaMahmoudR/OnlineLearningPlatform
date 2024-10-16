@@ -37,7 +37,15 @@
     {
         <div class="card">
             <div class="photo">
-                <img src="https://i.pinimg.com/564x/77/e0/a0/77e0a0892c06b5877c3c2fd8dc40b2cd.jpg" alt="@item.Name" />
+                @if (item.Image == null || item.Image == "")
+                {
+
+                    <img src="\images\CoursesImages\no-image.jpg" alt="NOImage" />
+                }
+                else
+                {
+                    <img src="@item.Image" alt="NOImage" />
+                }
             </div>
             <div class="description">
                 <h3 style="font-weight: bold;">@Html.DisplayFor(modelItem => item.Name)</h3>

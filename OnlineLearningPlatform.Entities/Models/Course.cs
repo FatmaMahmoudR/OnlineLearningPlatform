@@ -1,4 +1,5 @@
-﻿using OnlineLearningPlatform.Entities.Models;
+﻿using Microsoft.AspNetCore.Http;
+using OnlineLearningPlatform.Entities.Models;
 using OnlineLearningPlatform.Helpers;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,6 +14,9 @@ namespace OnlineLearningPlatform.Models
         public Category? Category { get; set; }
         public DifficultyLevel DifficultyLevel { get; set; }
         public int EnrollmentCount { get; set; } = 0;
+        public string? Image { get; set; }
+        [NotMapped]
+        public IFormFile? ImageFile { get; set; }
 
 
         [ForeignKey("Instructor")]

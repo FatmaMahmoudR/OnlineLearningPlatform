@@ -224,21 +224,26 @@ namespace OnlineLearningPlatform.App.Controllers
             {
                 throw new Exception("Enrollment not found.");
             }
-            if(enrollment.CompletionStatus == CompletionStatus.NotStarted)
-            {
-                enrollment.CompletionStatus = CompletionStatus.InProgress;
-                _context.SaveChanges();
-
-            }
+            
+            
 
             int totalLessons = enrollment.Course.Lessons.Count;
 
             int completedLessons = enrollment.LessonCompletions
                 .Count(lc => lc.IsCompleted);
 
-            if(completedLessons == totalLessons)
+            if(completedLessons == 0)
+            {
+                enrollment.CompletionStatus = CompletionStatus.NotStarted;
+                
+            }else if(completedLessons == totalLessons)
             {
                 enrollment.CompletionStatus = CompletionStatus.Completed;
+                
+            }
+            else
+            {
+                enrollment.CompletionStatus = CompletionStatus.InProgress;
                 _context.SaveChanges();
             }
 

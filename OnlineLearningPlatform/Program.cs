@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OnlineLearningPlatform.App.interfaces;
+using OnlineLearningPlatform.App.Repositories;
 using OnlineLearningPlatform.Models;
 
 namespace OnlineLearningPlatform
@@ -36,6 +38,8 @@ namespace OnlineLearningPlatform
             {
                 opt.AccessDeniedPath = new PathString("/Account/AccessDeniedNew");
             });
+
+            builder.Services.AddScoped<IUploudFile, UploadFile>();
 
             var app = builder.Build();
 

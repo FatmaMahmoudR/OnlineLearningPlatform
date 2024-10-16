@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using OnlineLearningPlatform.App.interfaces;
 using OnlineLearningPlatform.Entities.Models;
 using OnlineLearningPlatform.Helpers;
@@ -18,14 +17,34 @@ namespace OnlineLearningPlatform.Controllers
     [Authorize]
     public class CourseController : Controller
     {
-        private readonly context _context;
+        private IGenericRepository<Course> _repository;
+        private IGenericRepository<Enrollment> _enrollmentRepository;
+        private IGenericRepository<Lesson> _lessonRepository;
+        private IGenericRepository<LessonCompletion> _lessonCompletionRepository;
+        private IGenericRepository<Student> _studentRepository;
+        private IGenericRepository<Instructor> _instructorRepository;
+
         private readonly UserManager<AppUser> _userManager;
         private IWebHostEnvironment _environment;
         private IUploudFile _uploadFile;
 
-        public CourseController(context context, UserManager<AppUser> userManager, IWebHostEnvironment environment, IUploudFile uploadFile)
+        public CourseController(
+            IGenericRepository<Course> repository,
+            IGenericRepository<Enrollment> enrollmentRepository,
+            IGenericRepository<LessonCompletion> lessonCompletionRepository,
+            IGenericRepository<Student> studentRepository,
+            IGenericRepository<Instructor> instructorRepository,
+            IGenericRepository<Lesson> lessonRepository,
+            UserManager<AppUser> userManager,
+            IWebHostEnvironment environment,
+            IUploudFile uploadFile)
         {
-            _context = context;
+            _repository = repository;
+            _enrollmentRepository = enrollmentRepository;
+            _lessonCompletionRepository = lessonCompletionRepository;
+            _lessonRepository = lessonRepository;
+            _studentRepository = studentRepository;
+            _instructorRepository = instructorRepository;
             _userManager = userManager;
             _environment = environment;
             _uploadFile = uploadFile;
@@ -36,8 +55,7 @@ namespace OnlineLearningPlatform.Controllers
         [Route("Course")]
         public async Task<IActionResult> Index()
         {
-            var courses = await _context.Courses.ToListAsync();   // dah when the user not searching  (NO Search String Input)
-                                                                  // This function will show me all the couses in tne DB 
+            var courses = await _repository.GetAllAsync();
             return View(courses);
         }
 
@@ -45,159 +63,123 @@ namespace OnlineLearningPlatform.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("Course/Search")]
-        public async Task<IActionResult> Index(string searchString)  // dah b2a will be executed lma yb2a feh input in the search
+        public async Task<IActionResult> Index(string searchString)
         {
-            var courses = from c in _context.Courses select c;  // Retrieve all courses from the Courses table
-                                                                // in the DB - that contains search string -
+            var courses = await _repository.GetAllAsync();
 
-            // Check if a search string was provided 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
-                courses = courses.Where(c => c.Name.Contains(searchString));
+                courses = courses.Where(c => c.Name.Contains(searchString)).ToList();
             }
 
-            // store the search string in ViewData 3lshan law ht3mle tla2e el input bta3k lsa mogod
             ViewData["CurrentFilter"] = searchString;
 
-            return View(await courses.ToListAsync());
+            return View(courses);
         }
+
+
 
         [AllowAnonymous]
         [HttpGet]
         [Route("Course/Filter/{category}")]
         public async Task<IActionResult> Filter(Category? category)
         {
-            // Get the list of courses
-            var courses = from c in _context.Courses
-                          select c;
+            var courses = await _repository.GetAllAsync();
 
-            // If a category is selected, filter by category
             if (category != null)
             {
-                courses = courses.Where(c => c.Category == category);
+                courses = courses.Where(c => c.Category == category).ToList();
             }
 
-            // Retrieve the filtered list
-            var filteredCourses = await courses.ToListAsync();
-
-            return View("Index", filteredCourses); 
+            return View("Index", courses);
         }
 
 
-        // GET: /Course/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var course = await _context.Courses
-                .Include(c=>c.Lessons)
-                .Include(c => c.Instructor)
-                .ThenInclude(i => i.AppUser)
-                
-                .FirstOrDefaultAsync(c => c.Id == id && !EF.Property<bool>(c, "Deleted")); // Check if not deleted
+            var course = await _repository.GetAllAsync(
+                c => c.Id == id && !EF.Property<bool>(c, "Deleted"),
+                new[] { "Lessons", "Instructor.AppUser" });
+            if (course == null) return NotFound();
 
-            if (course == null)
-            {
-                return NotFound();
-            }
-
-            return View(course);
+            return View(course.FirstOrDefault());
         }
-
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> Enroll(int courseId)
         {
-            // Get the StudentId from claims
             var studentIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var studentId = GetStudentIdFromDatabase(studentIdClaim);
+            var studentId = await GetStudentIdFromDatabase(studentIdClaim);
 
             // Check if the student is already enrolled in the course
-            var existingEnrollment = await _context.Enrollments
-                .FirstOrDefaultAsync(e => e.CourseId == courseId && e.StudentId == studentId);
+            var existingEnrollment = await _enrollmentRepository
+                .GetAllAsync(e => e.CourseId == courseId && e.StudentId == studentId);
 
-            if (existingEnrollment != null)
+            if (existingEnrollment.Any())
             {
                 ViewBag.Message = "You are already enrolled in this course.";
-                return View(await _context.Courses.FindAsync(courseId));
+                return View(await _repository.GetByIdAsync(courseId));
             }
-            else
+
+            // Create new enrollment if not already enrolled
+            var enrollment = new Enrollment
             {
-                var enrollment = new Enrollment
+                CourseId = courseId,
+                StudentId = studentId,
+                EnrollmentDate = DateTime.Now,
+                CompletionStatus = CompletionStatus.NotStarted,
+                Progress = 0,
+            };
+
+            await _enrollmentRepository.AddAsync(enrollment);
+
+            var course = await _repository.GetByIdAsync(courseId);
+            if (course != null)
+            {
+                course.EnrollmentCount++;
+                await _repository.UpdateAsync(course);
+            }
+
+            // Retrieve lessons and associate them with the new enrollment
+            var lessonIds = await _lessonRepository.GetAllAsync(l => l.CourseId == courseId);
+
+            foreach (var lesson in lessonIds)
+            {
+                var lessonCompletion = new LessonCompletion
                 {
-                    CourseId = courseId,
-                    StudentId = studentId,
-                    EnrollmentDate = DateTime.Now,
-                    CompletionStatus = CompletionStatus.NotStarted,
-                    Progress = 0,
+                    EnrollmentId = enrollment.Id,
+                    LessonId = lesson.Id,
+                    IsCompleted = false
                 };
 
-                _context.Enrollments.Add(enrollment);
-
-                // Increment the enrollment count for the course
-                var course = await _context.Courses.FindAsync(courseId);
-                if (course != null)
-                {
-                    course.EnrollmentCount++; // Increment the enrollment count by one
-                }
-                await _context.SaveChangesAsync();
-
-                //****** Fill LessonCompletions Entity
-
-                // Fetch all lesson IDs
-                var lessonIds = await _context.Lessons
-                    .Where(l => l.CourseId == courseId) 
-                    .Select(l => l.Id) 
-                    .ToListAsync();
-
-                // Add LessonCompletions for each lesson
-                foreach (var lessonId in lessonIds)
-                {
-                    var lessonCompletion = new LessonCompletion
-                    {
-                        EnrollmentId = enrollment.Id, 
-                        LessonId = lessonId,
-                        IsCompleted = false 
-                    };
-
-                    _context.LessonCompletions.Add(lessonCompletion);
-                }
-
-               
-                await _context.SaveChangesAsync();
-
-                //******
-
-
-                ViewBag.Message = "You have successfully enrolled in the course.";
+                await _lessonCompletionRepository.AddAsync(lessonCompletion);
             }
-            return View(await _context.Courses.FindAsync(courseId));
+
+            ViewBag.Message = "You have successfully enrolled in the course.";
+            return View(await _repository.GetByIdAsync(courseId));
         }
 
-        // Helper method to retrieve StudentId from the database
-        private int GetStudentIdFromDatabase(string studentId)
+        private async Task<int> GetStudentIdFromDatabase(string studentId)
         {
-            var student = _context.Students.FirstOrDefault(s => s.AppUserId == studentId);
-            return student?.Id ?? 0;
+            var student = await _studentRepository
+                .GetAllAsync(s => s.AppUserId == studentId);
+
+            return student.FirstOrDefault()?.Id ?? 0;
         }
 
-        // GET: /Course/Create
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
-            var instructors = await _context.Instructors.Include(i => i.AppUser).ToListAsync();
+            var instructors = await _instructorRepository.GetAllAsync(null, new[] { "AppUser" });
             ViewData["instructors"] = instructors;
             return View();
         }
 
-        // POST: /Course/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -211,121 +193,72 @@ namespace OnlineLearningPlatform.Controllers
                     course.Image = FilePath;
                 }
 
-                _context.Add(course);
-                await _context.SaveChangesAsync();
+                await _repository.AddAsync(course);
                 return RedirectToAction(nameof(Index));
             }
             return View(course);
         }
 
-
-
-
-        // GET: /Course/Edit/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var course = await _context.Courses
-                .Include(c => c.Instructor)
-                .FirstOrDefaultAsync(c => c.Id == id && !EF.Property<bool>(c, "Deleted")); // Check if not deleted
+            var course = await _repository.GetAllAsync(
+                c => c.Id == id && !EF.Property<bool>(c, "Deleted"),
+                new[] { "Instructor.AppUser" });
+            if (course == null) return NotFound();
 
-            if (course == null)
-            {
-                return NotFound();
-            }
-
-            // Ensure instructors can only edit their own courses
             if (User.IsInRole("Instructor"))
             {
-                var instructorId = await _context.Instructors
-                    .Where(i => i.AppUserId == _userManager.GetUserId(User))
-                    .Select(i => i.Id)
-                    .FirstOrDefaultAsync();
-
-                if (course.InstructorId != instructorId)
-                {
-                    return Unauthorized();
-                }
+                var instructorId = await _instructorRepository.GetAllAsync(
+                    i => i.AppUserId == _userManager.GetUserId(User));
+                if (course.FirstOrDefault()?.InstructorId != instructorId.FirstOrDefault()?.Id) return Unauthorized();
             }
 
-            var instructors = await _context.Instructors.Include(i => i.AppUser).ToListAsync();
+            var instructors = await _instructorRepository.GetAllAsync(null, new[] { "AppUser" });
             ViewBag.instructors = instructors;
             ViewBag.DifficultyLevels = new SelectList(Enum.GetValues(typeof(DifficultyLevel)));
-
-            return View(course);
+            return View(course.FirstOrDefault());
         }
 
-        // POST: /Course/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, Course course)
         {
-            if (id != course.Id)
-            {
-                return NotFound();
-            }
+            if (id != course.Id) return NotFound();
 
-            // Ensure instructors can only edit their own courses
             if (User.IsInRole("Instructor"))
             {
-                var instructorId = await _context.Instructors
-                    .Where(i => i.AppUserId == _userManager.GetUserId(User))
-                    .Select(i => i.Id)
-                    .FirstOrDefaultAsync();
-
-                if (course.InstructorId != instructorId)
-                {
-                    return Unauthorized();
-                }
+                var instructorId = await _instructorRepository.GetAllAsync(i => i.AppUserId == _userManager.GetUserId(User));
+                if (course.InstructorId != instructorId.FirstOrDefault()?.Id) return Unauthorized();
             }
 
             if (ModelState.IsValid)
             {
-                try
+                if (course.ImageFile != null)
                 {
-                    if (course.ImageFile != null)
-                    {
-                        string FilePath = await _uploadFile.UploadFileAsync("\\Images\\CoursesImages\\", course.ImageFile);
-                        course.Image = FilePath;
-                    }
-                    _context.Update(course);
-                    await _context.SaveChangesAsync();
+                    string FilePath = await _uploadFile.UploadFileAsync("\\Images\\CoursesImages\\", course.ImageFile);
+                    course.Image = FilePath;
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CourseExists(course.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _repository.UpdateAsync(course);
                 return RedirectToAction(nameof(Index));
             }
 
-            var instructors = await _context.Instructors.Include(i => i.AppUser).ToListAsync();
+            var instructors = await _instructorRepository.GetAllAsync(null, new[] { "AppUser" });
             ViewBag.instructors = instructors;
             ViewBag.DifficultyLevels = new SelectList(Enum.GetValues(typeof(DifficultyLevel)));
-
             return View(course);
         }
-
-
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, Instructor")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var course = await _context.Courses.IgnoreQueryFilters().FirstOrDefaultAsync(m => m.Id == id);
+            // Fetch the course with no filters to allow soft delete
+            var course = await _repository.GetWithNoFiltersAsync(id);
 
             if (course == null)
             {
@@ -335,21 +268,15 @@ namespace OnlineLearningPlatform.Controllers
             // Ensure instructors can only delete their own courses
             if (User.IsInRole("Instructor"))
             {
-                var instructorId = await _context.Instructors
-                    .Where(i => i.AppUserId == _userManager.GetUserId(User))
-                    .Select(i => i.Id)
-                    .FirstOrDefaultAsync();
-
-                if (course.InstructorId != instructorId)
+                var instructorId = await _instructorRepository.GetAllAsync(i => i.AppUserId == _userManager.GetUserId(User));
+                if (instructorId.FirstOrDefault()?.Id != course.InstructorId)
                 {
                     return Unauthorized();
                 }
             }
 
-            // Soft delete - set the shadow property 'Deleted' to true
-            _context.Entry(course).Property("Deleted").CurrentValue = true;
-            _context.Courses.Update(course);
-            await _context.SaveChangesAsync();
+            // Perform soft delete using the repository
+            await _repository.SoftDeleteAsync(id);
 
             // Redirect based on the user role
             if (User.IsInRole("Instructor"))
@@ -361,32 +288,21 @@ namespace OnlineLearningPlatform.Controllers
         }
 
 
-
-
-        // Helper method to check if a course exists
-        private bool CourseExists(int id)
-        {
-           
-            return _context.Courses.Any(e => e.Id == id && !EF.Property<bool>(e, "Deleted"));
-        }
-
-
         [Authorize(Roles = "Instructor")]
         public async Task<IActionResult> MyCourses()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            IQueryable<Course> courses = _context.Courses
-                .Include(c => c.Instructor)
-                .ThenInclude(i => i.AppUser);
-            
-                var instructorId = await _context.Instructors
-                    .Where(i => i.AppUserId == userId)
-                    .Select(i => i.Id)
-                    .FirstOrDefaultAsync();
 
-                courses = courses.Where(c => c.InstructorId == instructorId);
-                      
-            return View(await courses.ToListAsync());
+            var instructor = (await _instructorRepository.GetAllAsync(i => i.AppUserId == userId)).FirstOrDefault();
+
+            if (instructor == null)
+            {
+                return NotFound("Instructor not found");
+            }
+
+            var courses = await _repository.GetAllAsync(c => c.InstructorId == instructor.Id);
+
+            return View(courses);
         }
 
     }

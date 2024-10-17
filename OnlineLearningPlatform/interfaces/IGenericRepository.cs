@@ -14,6 +14,7 @@ namespace OnlineLearningPlatform.App.interfaces
         Task DeleteAsync(int id);
         Task SoftDeleteAsync(int id);  // Soft delete
         Task<T> GetWithNoFiltersAsync(int id);
+        Task<List<T>> GetAllToListAsync(Expression<Func<T, bool>> predicate);
     }
 }
 

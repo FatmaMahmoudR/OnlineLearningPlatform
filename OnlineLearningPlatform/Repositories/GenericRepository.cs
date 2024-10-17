@@ -2,6 +2,8 @@
 using System.Linq.Expressions;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.App.interfaces;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
@@ -20,6 +22,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return entity;
     }
 
+   
     public async Task DeleteAsync(int id)
     {
         var item = await GetByIdAsync(id);
@@ -75,4 +78,12 @@ string[] includes = null)
         await _db.SaveChangesAsync();
         return entity;
     }
+
+    public async Task<List<T>> GetAllToListAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.Where(predicate).ToListAsync();
+    }
+
+
+
 }

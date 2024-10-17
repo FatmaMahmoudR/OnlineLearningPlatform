@@ -110,6 +110,7 @@ namespace OnlineLearningPlatform.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Student")]
+
         public async Task<IActionResult> Enroll(int courseId)
         {
             var studentIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -119,7 +120,7 @@ namespace OnlineLearningPlatform.Controllers
             var existingEnrollment = await _enrollmentRepository
                 .GetAllAsync(e => e.CourseId == courseId && e.StudentId == studentId);
 
-            if (existingEnrollment.Any())
+            if (existingEnrollment != null && existingEnrollment.Any())
             {
                 ViewBag.Message = "You are already enrolled in this course.";
                 return View(await _repository.GetByIdAsync(courseId));
@@ -144,15 +145,16 @@ namespace OnlineLearningPlatform.Controllers
                 await _repository.UpdateAsync(course);
             }
 
-            // Retrieve lessons and associate them with the new enrollment
-            var lessonIds = await _lessonRepository.GetAllAsync(l => l.CourseId == courseId);
+            // Retrieve lessons for the course
+            var lessons = await _lessonRepository.GetAllToListAsync(l => l.CourseId == courseId);
 
-            foreach (var lesson in lessonIds)
+            // Add lesson completions individually using the repository's AddAsync method
+            foreach (var lesson in lessons)
             {
                 var lessonCompletion = new LessonCompletion
                 {
                     EnrollmentId = enrollment.Id,
-                    LessonId = lesson.Id,
+                    LessonId = lesson.Id,  // Accessing Id property directly
                     IsCompleted = false
                 };
 

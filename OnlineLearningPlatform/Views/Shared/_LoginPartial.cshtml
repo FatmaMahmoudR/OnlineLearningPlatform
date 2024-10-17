@@ -3,8 +3,25 @@
 
 <ul class="navbar-nav">
 
+
     @if (_signInManager.IsSignedIn(User))
     {
+        if (User.IsInRole("Admin"))
+        {
+            <button class="btn btn-outline-sucess" style=" margin-right:20px; border-color: green;" >
+                <i class="fas fa-solid fa-user-large"></i>
+                    Admin Account
+             </button>
+           
+        }else if (User.IsInRole("Instructor"))
+        {
+            <button class="btn btn-outline-sucess" style=" margin-right:20px; border-color: green;">
+                <i class="fas fa-solid fa-user-large"></i>
+                Instructor Account
+            </button>
+
+        }
+
         <li class="nav-item">
             <form asp-action="Logout" method="post" asp-controller="Account">
             <button type="submit" class="btn btn-danger">Logout</button>

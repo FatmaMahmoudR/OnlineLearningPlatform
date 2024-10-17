@@ -244,8 +244,9 @@ namespace OnlineLearningPlatform.App.Controllers
             else
             {
                 enrollment.CompletionStatus = CompletionStatus.InProgress;
-                _context.SaveChanges();
+                
             }
+            _context.SaveChanges();
 
 
         }

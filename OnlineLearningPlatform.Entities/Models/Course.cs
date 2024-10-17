@@ -4,6 +4,7 @@ using OnlineLearningPlatform.Helpers;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace OnlineLearningPlatform.Models
 {
@@ -25,12 +26,15 @@ namespace OnlineLearningPlatform.Models
         public IFormFile? ImageFile { get; set; }
 
         public bool Modified { get; set; } = false;
+        public bool Published { get; set; } = false;
+
+        // Navigation properties
 
         [ForeignKey("Instructor")]
         public int InstructorId { get; set; }
         public Instructor? Instructor { get; set; }
 
-        // Navigation properties
+
         public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
         public List<Lesson>? Lessons { get; set; }
     }

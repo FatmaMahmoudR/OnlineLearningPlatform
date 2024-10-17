@@ -37,15 +37,20 @@
     {
         <div class="card">
             <div class="photo">
+                @if (!item.Published)
+                {
+                    <p class="text-center bg-light m-1" style="color:red"> Not Published</p>
+                }
+
                 @if (item.Image == null || item.Image == "")
                 {
-
-                    <img src="\images\CoursesImages\no-image.jpg" alt="NOImage" />
+                    <img src="~/images/coursesimages/no-image.jpg" alt="NOImage" />
                 }
                 else
                 {
                     <img src="@item.Image" alt="NOImage" />
                 }
+                
             </div>
             <div class="description">
                 <h3 style="font-weight: bold;">@Html.DisplayFor(modelItem => item.Name)</h3>

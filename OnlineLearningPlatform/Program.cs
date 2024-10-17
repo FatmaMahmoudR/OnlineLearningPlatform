@@ -21,12 +21,13 @@ namespace OnlineLearningPlatform
             builder.Services.AddIdentity<AppUser, IdentityRole>(
                 opt =>
                 {
-                    opt.Password.RequiredLength = 1;
-                    opt.Password.RequiredUniqueChars = 0;
+                    opt.Password.RequiredLength = 4;
+                    opt.Password.RequiredUniqueChars = 2;
                     opt.Password.RequireNonAlphanumeric = false;
                     opt.Password.RequireDigit = false;
                     opt.Password.RequireLowercase = false;
                     opt.Password.RequireUppercase = false;
+                    
                 }
                 ).AddEntityFrameworkStores<context>().AddDefaultTokenProviders();
 

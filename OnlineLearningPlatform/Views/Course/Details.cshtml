@@ -42,7 +42,7 @@
                         <div class="row">
                             <div class="item col-4">
                                 <div class="summary-desc mb-1"><i class="icon fas fa-video me-2"></i>Content</div>
-                                <h4 class="summary-heading"> @Model.Lessons.Count+ <span class="desc">Videos</span></h4>
+                                <h4 class="summary-heading"> @Model.Lessons.Count <span class="desc">Videos</span></h4>
                             </div>
                             <div class="item col-4">
                                 <div class="summary-desc mb-1"><i class="fas fa-bolt me-2"></i>Level</div>
@@ -73,11 +73,25 @@
 
 
             <!-- Control Options for Instructor -->
-            @if (User.IsInRole("Instructor")) // Check if the user is an instructor
+            @if (User.IsInRole("Instructor")) 
             {
                 <div class="text-center mb-5">
                     <a style="text-decoration: none;" href="@Url.Action("Create", "Lesson", new { courseId = Model.Id })" class="btn btn-success me-2">Add New Lesson</a>
                 </div>
+
+                @if (!Model.Published)
+                {
+                    <div class="text-center mb-5">
+                    <form asp-action="Publish" method="post" class="d-inline">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-success me-2">Publish</button>
+                    @Html.AntiForgeryToken()
+                    </form>
+                    </div>
+                }
+
+                
+
             }
 
 
@@ -238,6 +252,34 @@
                 iframe.setAttribute('src', src);
             });
         });
+
+
+        //////////Publish Course ////////////
+        <script>
+            function publishCourse(courseId) {
+                if (confirm("Are you sure you want to publish this course?")) {
+                $.ajax({
+                    url: '@Url.Action("Publish", "Course")', 
+                    type: "POST",
+                    data: {
+                        id: courseId,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() 
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message); 
+                            location.reload(); 
+                        } else {
+                            alert("Failed to publish the course.");
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred while trying to publish the course.");
+                    }
+                });
+                }
+            }
+    </script>
 
 
 

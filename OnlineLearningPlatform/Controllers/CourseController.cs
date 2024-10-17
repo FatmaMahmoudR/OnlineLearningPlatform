@@ -56,6 +56,13 @@ namespace OnlineLearningPlatform.Controllers
         public async Task<IActionResult> Index()
         {
             var courses = await _repository.GetAllAsync();
+            if (User.IsInRole("Student") || User.IsInRole("Instructor"))
+            {
+                courses = courses.Where(c =>c.Published == true).ToList();
+
+            }
+            
+
             return View(courses);
         }
 
@@ -67,10 +74,17 @@ namespace OnlineLearningPlatform.Controllers
         {
             var courses = await _repository.GetAllAsync();
 
+            if (User.IsInRole("Student") || User.IsInRole("Instructor"))
+            {
+                courses = courses.Where(c => c.Published).ToList();
+            }
+
             if (!string.IsNullOrEmpty(searchString))
             {
-                courses = courses.Where(c => c.Name.Contains(searchString)).ToList();
+                courses = courses.Where(c => c.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
             }
+
+
 
             ViewData["CurrentFilter"] = searchString;
 
@@ -305,6 +319,36 @@ namespace OnlineLearningPlatform.Controllers
             var courses = await _repository.GetAllAsync(c => c.InstructorId == instructor.Id);
 
             return View(courses);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Instructor")]
+        public async Task<IActionResult> Publish(int id)
+        {
+            var course = await _repository.GetByIdAsync(id);
+
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            var instructorId = await _instructorRepository.GetAllAsync(i => i.AppUserId == _userManager.GetUserId(User));
+                
+
+            // Check if the current user is the instructor of the course
+            if (instructorId.FirstOrDefault()?.Id != course.InstructorId)
+            {
+                return Unauthorized(); 
+            }
+
+            // Mark the course as published
+            course.Published = true;
+            await _repository.UpdateAsync(course);
+
+            //success response
+            return RedirectToAction("MyCourses", "Course");
         }
 
     }

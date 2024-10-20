@@ -24,9 +24,14 @@ namespace OnlineLearningPlatform.App.Controllers
 
 
 
-
-		//Enrollment/Details/1
-		public async Task<IActionResult> Details(int? id) //crs id
+        /// <summary>
+        /// Retrieves the details of a specific enrollment for the current student.
+        /// Returns a NotFound result if the course ID is missing, the student is not found, or not enrolled in the course.
+        /// </summary>
+        /// <param name="id">The course ID.</param>
+        /// <returns>The enrollment details view or an error message.</returns>
+        //Enrollment/Details/1
+        public async Task<IActionResult> Details(int? id) //crs id
 		{
 			if (id == null)
 			{
@@ -68,7 +73,12 @@ namespace OnlineLearningPlatform.App.Controllers
 
 
 
-
+        /// <summary>
+        /// Displays the current student's enrolled courses and their progress.
+        /// Returns a NotFound result if the student is not found or has no enrollments.
+        /// Updates progress and completion status for modified courses.
+        /// </summary>
+        /// <returns>The view of the student's enrollments.</returns>
         public async Task<IActionResult> MyLearning()
         {
 
@@ -115,7 +125,13 @@ namespace OnlineLearningPlatform.App.Controllers
 
 
 
-
+        /// <summary>
+        /// Marks a lesson as completed for a specific enrollment.
+        /// Returns a success or error response based on the operation's outcome.
+        /// </summary>
+        /// <param name="enrollmentId">The enrollment ID.</param>
+        /// <param name="lessonId">The lesson ID.</param>
+        /// <returns>A response indicating success or failure.</returns>
         [HttpPost("Enrollment/MarkLessonCompleted/{enrollmentId}/{lessonId}")]
         public async Task<IActionResult> MarkLessonCompleted(int enrollmentId, int lessonId)
         {
@@ -182,7 +198,11 @@ namespace OnlineLearningPlatform.App.Controllers
 
 
 
-
+        /// <summary>
+        /// Calculates and updates the progress percentage of lessons completed for a given enrollment.
+        /// Throws an exception if the enrollment is not found.
+        /// </summary>
+        /// <param name="enrollmentId">The enrollment ID.</param>
         //After lesson completion || id course is modified
         public void UpdateProgress(int enrollmentId)
         {
@@ -211,7 +231,10 @@ namespace OnlineLearningPlatform.App.Controllers
 
 
 
-
+        /// <summary>
+        /// Updates the completion status of an enrollment based on the number of completed lessons.
+        /// Throws an exception if the enrollment is not found.
+        /// </summary>
         public void changeCompletionStatus(int enrollmentId)
         {
             var enrollment = _context.Enrollments

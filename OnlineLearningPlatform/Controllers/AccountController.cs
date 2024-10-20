@@ -18,13 +18,19 @@ namespace OnlineLearningPlatform.App.Controllers
             _signInManager = signInManager;
             _context = context;
         }
-
+        
         public IActionResult Register()
         {
             return View();
         }
 
 
+        /// <summary>
+        /// Handles the user registration process, creates a new user, assigns the "Student" role, 
+        /// automatically signs in the user, and creates a corresponding Student record in the database.
+        /// </summary>
+        /// <param name="model">The registration view model containing username, email, and password.</param>
+        /// <returns>Redirects to the Home index page on success or returns the registration view with validation errors on failure.</returns>
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -57,7 +63,6 @@ namespace OnlineLearningPlatform.App.Controllers
                     await _signInManager.SignInAsync(newUser, isPersistent: false);
 
 
-
                     // Create a new Student entry
                     var student = new Student
                     {
@@ -67,8 +72,6 @@ namespace OnlineLearningPlatform.App.Controllers
                     // Add the student to the DbContext and save changes
                     await _context.Students.AddAsync(student);
                     await _context.SaveChangesAsync(); 
-
-
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -84,12 +87,33 @@ namespace OnlineLearningPlatform.App.Controllers
         }
 
 
+
+
+
+        /// <summary>
+        /// Displays the login page and passes the return URL, if any, to the view.
+        /// </summary>
+        /// <param name="ReturnUrl">Optional URL to redirect the user after a successful login.</param>
+        /// <returns>Returns the login view.</returns>
         [HttpGet]
         public IActionResult Login(string? ReturnUrl)
         {
             ViewData["ReturnUrl"] = ReturnUrl;
             return View();
         }
+
+
+
+        /// <summary>
+        /// Handles the user login process.
+        /// </summary>
+        /// <param name="model">The login view model containing the username/email, password, and remember me.
+        /// </param>
+        /// <param name="ReturnUrl">Optional URL to redirect the user after a successful login.</param>
+        /// <returns>
+        /// Redirects to the home page or the specified return URL upon successful login, 
+        /// or returns the login view with validation errors if login fails.
+        /// </returns>
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model, string? ReturnUrl)
         {
@@ -106,6 +130,7 @@ namespace OnlineLearningPlatform.App.Controllers
                     }
                     
                 }
+
                 var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
@@ -115,16 +140,22 @@ namespace OnlineLearningPlatform.App.Controllers
                     }
                    return Redirect(ReturnUrl);
                 }
-                    ModelState.AddModelError(string.Empty, "User data incorrect");
+                 
+                ModelState.AddModelError(string.Empty, "User data incorrect");
             }
+
             return View(model);
         }
+
+
+
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
 
         //public IActionResult AccessDenied()
         //{

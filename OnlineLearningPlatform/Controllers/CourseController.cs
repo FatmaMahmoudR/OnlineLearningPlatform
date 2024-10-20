@@ -50,22 +50,35 @@ namespace OnlineLearningPlatform.Controllers
             _uploadFile = uploadFile;
         }
 
+
+
+
+        /// <summary>
+        /// Displays a list of courses. Admins can see all courses, 
+        /// while anonymous users, students, and instructors can only see published courses.
+        /// </summary>
+        /// <returns>Returns the view containing the list of courses.</returns>
         [AllowAnonymous]
         [HttpGet]
         [Route("Course")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index() 
         {
             var courses = await _repository.GetAllAsync();
-            if (User.IsInRole("Student") || User.IsInRole("Instructor"))
+
+            if (!User.Identity.IsAuthenticated  || User.IsInRole("Student") || User.IsInRole("Instructor"))
             {
                 courses = courses.Where(c =>c.Published == true).ToList();
 
             }
-            
-
             return View(courses);
         }
 
+        /// <summary>
+        /// Displays a list of courses with an optional search filter. 
+        ///  Filters courses by name if a search string is provided.
+        /// </summary>
+        /// <param name="searchString"> The search term to filter courses by name.</param>
+        /// <returns>Returns the view containing the filtered list of courses.</returns>
 
         [AllowAnonymous]
         [HttpGet]
@@ -74,7 +87,7 @@ namespace OnlineLearningPlatform.Controllers
         {
             var courses = await _repository.GetAllAsync();
 
-            if (User.IsInRole("Student") || User.IsInRole("Instructor"))
+            if (!User.Identity.IsAuthenticated  || User.IsInRole("Student") || User.IsInRole("Instructor"))
             {
                 courses = courses.Where(c => c.Published).ToList();
             }
@@ -85,11 +98,11 @@ namespace OnlineLearningPlatform.Controllers
             }
 
 
-
             ViewData["CurrentFilter"] = searchString;
 
             return View(courses);
         }
+
 
 
 
@@ -109,6 +122,13 @@ namespace OnlineLearningPlatform.Controllers
         }
 
 
+        /// <summary>
+        /// Displays the details of a specific course, including its lessons and instructor information. 
+        /// Ensures that the course is not marked as deleted.
+        /// </summary>
+        /// <param name="id">The ID of the course to display details for.</param>
+        /// <returns>Returns the course details view if found, otherwise returns a 404 NotFound result.</returns>
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -116,15 +136,25 @@ namespace OnlineLearningPlatform.Controllers
             var course = await _repository.GetAllAsync(
                 c => c.Id == id && !EF.Property<bool>(c, "Deleted"),
                 new[] { "Lessons", "Instructor.AppUser" });
+
             if (course == null) return NotFound();
 
             return View(course.FirstOrDefault());
         }
 
+
+
+        /// <summary>
+        /// Handles the enrollment of a student in a specified course. 
+        /// It checks if the student is already enrolled; if not, it creates a new enrollment record, 
+        /// updates the course's enrollment count, and initializes lesson completions for the course.
+        /// </summary>
+        /// <param name="courseId">The ID of the course the student wishes to enroll in.</param>
+        /// <returns>Returns the course details view with a success or informational message.</returns>
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Student")]
-
         public async Task<IActionResult> Enroll(int courseId)
         {
             var studentIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -188,6 +218,7 @@ namespace OnlineLearningPlatform.Controllers
         }
 
 
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
@@ -195,6 +226,16 @@ namespace OnlineLearningPlatform.Controllers
             ViewData["instructors"] = instructors;
             return View();
         }
+
+
+
+        /// <summary>
+        /// Handles the creation of a new course by an admin. 
+        /// It validates the course data, uploads an associated image if provided, 
+        /// and adds the course to the repository. If successful, it redirects to the course index.
+        /// </summary>
+        /// <param name="course">The course object containing the details of the course to be created.</param>
+        /// <returns>Returns the course index view on successful creation, or the course creation view with validation errors if invalid.</returns>
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -215,6 +256,14 @@ namespace OnlineLearningPlatform.Controllers
             return View(course);
         }
 
+
+        /// <summary>
+        /// Displays the edit view for a specific course, allowing an admin to modify course details.
+        /// Retrieves the course by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the course to be edited.</param>
+        /// <returns>Returns the edit view for the course if found; otherwise, returns a 404 NotFound result.</returns>
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -225,12 +274,13 @@ namespace OnlineLearningPlatform.Controllers
                 new[] { "Instructor.AppUser" });
             if (course == null) return NotFound();
 
-            if (User.IsInRole("Instructor"))
-            {
-                var instructorId = await _instructorRepository.GetAllAsync(
-                    i => i.AppUserId == _userManager.GetUserId(User));
-                if (course.FirstOrDefault()?.InstructorId != instructorId.FirstOrDefault()?.Id) return Unauthorized();
-            }
+
+            //if (User.IsInRole("Instructor"))
+            //{
+            //    var instructorId = await _instructorRepository.GetAllAsync(
+            //        i => i.AppUserId == _userManager.GetUserId(User));
+            //    if (course.FirstOrDefault()?.InstructorId != instructorId.FirstOrDefault()?.Id) return Unauthorized();
+            //}
 
             var instructors = await _instructorRepository.GetAllAsync(null, new[] { "AppUser" });
             ViewBag.instructors = instructors;
@@ -238,18 +288,29 @@ namespace OnlineLearningPlatform.Controllers
             return View(course.FirstOrDefault());
         }
 
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
+        /// <summary> 
+        /// It validates the course data, uploads a new image if provided, 
+        /// If successful, it redirects to the course index.
+        /// </summary>
+        /// <param name="id">The ID of the course being edited.</param>
+        /// <param name="course">The course object containing the updated details.</param>
+        /// <returns>Returns the course index view on successful update, 
+        /// or the edit view with validation errors if invalid.</returns>
+
         public async Task<IActionResult> Edit(int id, Course course)
         {
             if (id != course.Id) return NotFound();
 
-            if (User.IsInRole("Instructor"))
-            {
-                var instructorId = await _instructorRepository.GetAllAsync(i => i.AppUserId == _userManager.GetUserId(User));
-                if (course.InstructorId != instructorId.FirstOrDefault()?.Id) return Unauthorized();
-            }
+            //if (User.IsInRole("Instructor"))
+            //{
+            //    var instructorId = await _instructorRepository.GetAllAsync(i => i.AppUserId == _userManager.GetUserId(User));
+            //    if (course.InstructorId != instructorId.FirstOrDefault()?.Id) return Unauthorized();
+            //}
 
             if (ModelState.IsValid)
             {
@@ -268,9 +329,11 @@ namespace OnlineLearningPlatform.Controllers
             return View(course);
         }
 
+
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             // Fetch the course with no filters to allow soft delete
@@ -281,28 +344,19 @@ namespace OnlineLearningPlatform.Controllers
                 return NotFound();
             }
 
-            // Ensure instructors can only delete their own courses
-            if (User.IsInRole("Instructor"))
-            {
-                var instructorId = await _instructorRepository.GetAllAsync(i => i.AppUserId == _userManager.GetUserId(User));
-                if (instructorId.FirstOrDefault()?.Id != course.InstructorId)
-                {
-                    return Unauthorized();
-                }
-            }
-
             // Perform soft delete using the repository
             await _repository.SoftDeleteAsync(id);
 
-            // Redirect based on the user role
-            if (User.IsInRole("Instructor"))
-            {
-                return RedirectToAction("MyCourses", "Course");
-            }
-
+           
             return RedirectToAction(nameof(Index));
         }
 
+
+        /// <summary>
+        /// Displays the courses associated with the currently logged-in instructor. 
+        /// </summary>
+        /// <returns>Returns the view containing the instructor's courses, 
+        /// or a 404 NotFound result if the instructor is not found.</returns>
 
         [Authorize(Roles = "Instructor")]
         public async Task<IActionResult> MyCourses()
@@ -321,6 +375,16 @@ namespace OnlineLearningPlatform.Controllers
             return View(courses);
         }
 
+
+        /// <summary>
+        /// Publishes a specific course, allowing the instructor to make it available 
+        /// to students. It checks that the instructor is the owner of the course 
+        /// before marking it as published.
+        /// </summary>
+        /// <param name="id">The ID of the course to be published.</param>
+        /// <returns>Returns the MyCourses view on successful publication, 
+        /// or a 404 NotFound result if the course is not found, 
+        /// or an Unauthorized result if the instructor does not own the course.</returns>
 
         [HttpPost]
         [ValidateAntiForgeryToken]

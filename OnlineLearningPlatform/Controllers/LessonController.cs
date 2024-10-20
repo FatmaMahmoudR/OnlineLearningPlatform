@@ -24,6 +24,7 @@ namespace OnlineLearningPlatform.App.Controllers
             _userManager = userManager; 
         }
 
+     
         // GET: /Lesson/Details/5
         public async Task<IActionResult> Details(int id)
         {
@@ -38,6 +39,17 @@ namespace OnlineLearningPlatform.App.Controllers
 
             return View(lesson);
         }
+
+
+
+        /// <summary>
+        /// Displays the create lesson view for a specific course. 
+        /// It checks if the current instructor is authorized to create a lesson 
+        /// for the specified course.
+        /// </summary>
+        /// <param name="courseId">The ID of the course for which a lesson is being created.</param>
+        /// <returns>Returns the create lesson view with the course ID, 
+        /// or a 404 NotFound result if the course is not found.</returns>
 
         // GET: /Lesson/Create?courseId=1
         public async Task<IActionResult> Create(int courseId)
@@ -56,6 +68,14 @@ namespace OnlineLearningPlatform.App.Controllers
             var lesson = new Lesson();
             return View(lesson);
         }
+
+
+        /// <summary>
+        /// Submits a new lesson for a course, validates the data, and creates lesson completion records for enrollments.
+        /// </summary>
+        /// <param name="lesson">The lesson object containing details for creation.</param>
+        /// <returns>Course details view on success, or create lesson view with validation errors if invalid.</returns>
+
 
         // POST: /Lesson/Create
         [HttpPost]
@@ -97,6 +117,12 @@ namespace OnlineLearningPlatform.App.Controllers
             return View(lesson);
         }
 
+
+        /// <summary>
+        /// Displays the edit view for a lesson, checking instructor authorization.
+        /// </summary>
+        /// <param name="id">The lesson ID.</param>
+        /// <returns>Returns the edit view or 404 if not found.</returns>
         // GET: /Lesson/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
@@ -126,6 +152,13 @@ namespace OnlineLearningPlatform.App.Controllers
             return View(lesson);
         }
 
+
+        /// <summary>
+        /// Processes changes to a lesson, checking authorization and redirecting on success.
+        /// </summary>
+        /// <param name="id">The lesson ID.</param>
+        /// <param name="lesson">The updated lesson data.</param>
+        /// <returns>Redirects to course details or shows the edit view on errors.</returns>
         // POST: /Lesson/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -184,11 +217,18 @@ namespace OnlineLearningPlatform.App.Controllers
             return View(lesson);
         }
 
+
         private bool LessonExists(int id)
         {
             return _context.Lessons.Any(e => e.Id == id);
         }
 
+
+        /// <summary>
+        /// Marks a lesson as deleted, checking instructor authorization before deletion.
+        /// </summary>
+        /// <param name="id">The lesson ID.</param>
+        /// <returns>Redirects to the course details or returns 404 if not found or unauthorized.</returns>
         // POST: /Lesson/Delete/5 
         [HttpPost]
         [ValidateAntiForgeryToken]
